@@ -65,11 +65,11 @@ export const RoadmapSection: React.FC = () => {
         className="text-center mb-12"
       >
         <h2 className="font-display font-bold text-3xl lg:text-4xl mb-4">
-          Where we're{' '}
+          Where we&apos;re{' '}
           <span className="gradient-text">going</span>
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto">
-          Content is just the beginning. We're building the operating system for modern business.
+          Content is just the beginning. We&apos;re building the operating system for modern business.
         </p>
       </motion.div>
 

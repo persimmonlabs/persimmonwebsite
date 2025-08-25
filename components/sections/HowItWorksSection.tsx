@@ -134,7 +134,7 @@ export const HowItWorksSection: React.FC = () => {
             </p>
             <div className="mt-6">
               <p className="text-sm text-gray-500">
-                Compare that to the 20+ hours per week you're currently spending on content
+                Compare that to the 20+ hours per week you&apos;re currently spending on content
               </p>
             </div>
           </div>

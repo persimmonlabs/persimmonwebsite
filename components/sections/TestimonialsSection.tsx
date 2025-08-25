@@ -74,7 +74,7 @@ export const TestimonialsSection: React.FC = () => {
             </div>
 
             <p className="text-gray-700 mb-6 leading-relaxed">
-              "{testimonial.content}"
+              &ldquo;{testimonial.content}&rdquo;
             </p>
 
             <div className="flex items-center">

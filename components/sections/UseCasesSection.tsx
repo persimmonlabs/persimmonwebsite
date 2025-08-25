@@ -128,7 +128,7 @@ export const UseCasesSection: React.FC = () => {
               from SaaS startups to local services. If you create content, we can automate it.
             </p>
             <button className="bg-gradient-to-r from-persimmon-orange to-persimmon-coral text-white px-8 py-3 rounded-full font-semibold hover:shadow-xl transition-all duration-300">
-              Let's Discuss Your Use Case
+              Let&apos;s Discuss Your Use Case
             </button>
           </div>
         </motion.div>

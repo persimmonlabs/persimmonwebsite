@@ -66,7 +66,7 @@ export const ProblemSolutionSection: React.FC = () => {
             <div className="mb-8">
               <span className="text-persimmon-red font-semibold text-sm uppercase tracking-wider">The Problem</span>
               <h2 className="text-4xl font-display font-bold mt-2 mb-4">Your Current State</h2>
-              <p className="text-gray-600">You're drowning in content tasks that eat up your time and money.</p>
+              <p className="text-gray-600">You&apos;re drowning in content tasks that eat up your time and money.</p>
             </div>
             
             <div className="space-y-4">

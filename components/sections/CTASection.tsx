@@ -27,7 +27,7 @@ export const CTASection: React.FC = () => {
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Every day you wait, your competitors are building stronger relationships with YOUR potential customers. 
-            Let's automate your growth starting today.
+            Let&apos;s automate your growth starting today.
           </p>
 
           {/* Value props */}
