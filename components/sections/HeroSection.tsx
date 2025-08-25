@@ -2,153 +2,119 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Button } from '../Button'
-import { SectionContainer } from '../SectionContainer'
-import { ArrowRight, Calendar, Upload, Zap, Instagram, Linkedin, Twitter, Facebook, Mail, FileText } from 'lucide-react'
+import { ArrowDown, Sparkles, Zap } from 'lucide-react'
 
 export const HeroSection: React.FC = () => {
+  const scrollToDemo = () => {
+    document.getElementById('demo-generator')?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <SectionContainer className="min-h-screen flex items-center pt-20 relative overflow-hidden">
-      {/* Animated gradient background */}
+    <section className="relative min-h-[70vh] flex items-center justify-center px-4 pt-20 pb-12 overflow-hidden">
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-red-50 -z-10" />
+      
+      {/* Animated background shapes */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-persimmon-orange/10 via-white to-persimmon-coral/10 animate-gradient" />
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            rotate: [0, 90, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-br from-orange-200/20 to-red-200/20 rounded-full blur-3xl"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            rotate: [0, -90, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-br from-red-200/20 to-orange-200/20 rounded-full blur-3xl"
+        />
       </div>
 
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-5xl mx-auto text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
+          {/* Badge */}
+          <motion.div 
+            className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-red-100 px-4 py-2 rounded-full mb-6"
+            whileHover={{ scale: 1.05 }}
+          >
+            <Sparkles className="w-4 h-4 text-orange-600" />
+            <span className="text-sm font-semibold text-gray-800">AI-Powered Content Automation</span>
+            <Zap className="w-4 h-4 text-red-600" />
+          </motion.div>
+
           {/* Main headline */}
-          <h1 className="font-display font-bold text-5xl lg:text-6xl xl:text-7xl mb-6 leading-tight text-center">
-            Your AI Content Team -{' '}
-            <span className="gradient-text">Running 24/7 While You Sleep</span>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+            Turn One Upload Into
+            <span className="block mt-2 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent">
+              Weeks of Content
+            </span>
           </h1>
-          
+
           {/* Subheadline */}
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed max-w-3xl mx-auto text-center">
-            We build custom n8n automations that handle your entire content workflow. 
-            Upload once, publish everywhere, forever.
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
+            Try it free in 60 seconds. Upload an image or URL, get 3 professional social posts instantly.
           </p>
 
-          {/* CTAs */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-            <Button size="lg" className="group">
-              Book Free Automation Audit
-              <Calendar className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button size="lg" variant="secondary">
-              See Live Demo
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
+          {/* CTA Button */}
+          <motion.button
+            onClick={scrollToDemo}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-semibold text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <span className="flex items-center space-x-2">
+              <span>Try Free Demo Now</span>
+              <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
+            </span>
+          </motion.button>
 
-          {/* Animated Flow Diagram */}
-          <div className="relative max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-gray-100"
-            >
-              {/* Flow visualization */}
-              <div className="flex items-center justify-between">
-                {/* Source */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="flex flex-col items-center"
-                >
-                  <div className="w-20 h-20 bg-gradient-to-br from-persimmon-orange to-persimmon-coral rounded-xl flex items-center justify-center mb-2">
-                    <Upload className="w-10 h-10 text-white" />
-                  </div>
-                  <span className="text-sm font-medium">Upload Once</span>
-                </motion.div>
+          {/* Trust indicators */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            className="mt-8 flex flex-wrap justify-center items-center gap-6 text-sm text-gray-500"
+          >
+            <span className="flex items-center space-x-1">
+              <span className="text-green-600">✓</span>
+              <span>No credit card required</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <span className="text-green-600">✓</span>
+              <span>60-second setup</span>
+            </span>
+            <span className="flex items-center space-x-1">
+              <span className="text-green-600">✓</span>
+              <span>Real AI generation</span>
+            </span>
+          </motion.div>
+        </motion.div>
 
-                {/* Flow arrows */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.7 }}
-                  className="flex-1 px-4"
-                >
-                  <div className="relative h-2 bg-gradient-to-r from-persimmon-orange to-persimmon-coral rounded-full">
-                    <motion.div
-                      animate={{ x: [0, 100, 0] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                      className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-white border-2 border-persimmon-orange rounded-full shadow-lg"
-                    />
-                  </div>
-                  <div className="flex items-center justify-center mt-2">
-                    <div className="bg-persimmon-peach/20 px-3 py-1 rounded-full">
-                      <span className="text-xs font-medium text-persimmon-red">AI Processing</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Destinations */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.9 }}
-                  className="grid grid-cols-3 gap-2"
-                >
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <Instagram className="w-7 h-7 text-pink-600" />
-                    </div>
-                    <span className="text-xs">Instagram</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <Linkedin className="w-7 h-7 text-blue-700" />
-                    </div>
-                    <span className="text-xs">LinkedIn</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <Twitter className="w-7 h-7 text-sky-500" />
-                    </div>
-                    <span className="text-xs">Twitter/X</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <Facebook className="w-7 h-7 text-blue-600" />
-                    </div>
-                    <span className="text-xs">Facebook</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <Mail className="w-7 h-7 text-gray-600" />
-                    </div>
-                    <span className="text-xs">Newsletter</span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <div className="w-14 h-14 bg-gray-100 rounded-lg flex items-center justify-center mb-1">
-                      <FileText className="w-7 h-7 text-green-600" />
-                    </div>
-                    <span className="text-xs">Blog</span>
-                  </div>
-                </motion.div>
-              </div>
-
-              {/* Status indicator */}
-              <motion.div
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="mt-6 flex items-center justify-center"
-              >
-                <div className="flex items-center space-x-2 bg-green-50 px-4 py-2 rounded-full">
-                  <Zap className="w-4 h-4 text-green-600" />
-                  <span className="text-sm font-medium text-green-800">Publishing Automatically 24/7</span>
-                </div>
-              </motion.div>
-            </motion.div>
-          </div>
+        {/* Animated arrow pointing down */}
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        >
+          <ArrowDown className="w-8 h-8 text-gray-400" />
         </motion.div>
       </div>
-    </SectionContainer>
+    </section>
   )
 }
