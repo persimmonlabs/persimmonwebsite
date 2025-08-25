@@ -119,7 +119,7 @@ export const DemoGeneratorSection: React.FC = () => {
   }
 
   return (
-    <section id="demo-generator" className="py-20 px-4 bg-gradient-to-b from-white to-gray-50">
+    <section id="demo-generator" className="py-20 px-4 bg-black">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
@@ -129,14 +129,14 @@ export const DemoGeneratorSection: React.FC = () => {
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-red-100 px-4 py-2 rounded-full mb-4">
-            <Sparkles className="w-4 h-4 text-orange-600" />
+          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-4 border border-white/20">
+            <Sparkles className="w-4 h-4 text-brand-primary" />
             <span className="text-sm font-semibold">Free Demo Generator</span>
           </div>
-          <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-            Try It Now - <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">60 Seconds</span>
+          <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
+            Try It Now - <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">60 Seconds</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Upload your content, tell us about your brand, and watch AI create professional social posts instantly.
           </p>
         </motion.div>
@@ -152,13 +152,13 @@ export const DemoGeneratorSection: React.FC = () => {
                     opacity: step >= num ? 1 : 0.5
                   }}
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                    step >= num ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white' : 'bg-gray-200 text-gray-500'
+                    step >= num ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white' : 'bg-gray-700 text-gray-400'
                   }`}
                 >
                   {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
                 </motion.div>
                 {num < 4 && (
-                  <div className={`w-20 h-1 rounded ${step > num ? 'bg-orange-600' : 'bg-gray-200'}`} />
+                  <div className={`w-20 h-1 rounded ${step > num ? 'bg-brand-primary' : 'bg-gray-700'}`} />
                 )}
               </React.Fragment>
             ))}
@@ -173,20 +173,20 @@ export const DemoGeneratorSection: React.FC = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-2xl shadow-lg p-8"
+              className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <Upload className="w-6 h-6 mr-2 text-orange-600" />
+              <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
+                <Upload className="w-6 h-6 mr-2 text-brand-primary" />
                 Step 1: Upload Your Content
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
                 {/* File Upload */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Upload Image (Optional)
                   </label>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-orange-400 transition-colors">
+                  <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-brand-primary transition-colors bg-gray-800/50">
                     <input
                       type="file"
                       accept="image/*"
@@ -207,7 +207,7 @@ export const DemoGeneratorSection: React.FC = () => {
 
                 {/* URL Input */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Or Paste a URL
                   </label>
                   <div className="relative">
@@ -217,7 +217,7 @@ export const DemoGeneratorSection: React.FC = () => {
                       placeholder="https://example.com/article"
                       value={formData.url}
                       onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                      className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export const DemoGeneratorSection: React.FC = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-2xl shadow-lg p-8"
+              className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
               <h3 className="text-2xl font-bold mb-6 flex items-center">
                 <Palette className="w-6 h-6 mr-2 text-orange-600" />
@@ -289,7 +289,7 @@ export const DemoGeneratorSection: React.FC = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Brand Name */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Brand Name
                   </label>
                   <input
@@ -303,7 +303,7 @@ export const DemoGeneratorSection: React.FC = () => {
 
                 {/* Brand Colors */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Brand Colors (Optional)
                   </label>
                   <input
@@ -451,7 +451,7 @@ export const DemoGeneratorSection: React.FC = () => {
               key="step4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-2xl shadow-lg p-8"
+              className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold flex items-center">

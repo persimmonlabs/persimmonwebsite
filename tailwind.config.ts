@@ -17,6 +17,13 @@ const config: Config = {
           peach: '#f79a6b',
           orange: '#f1580c',
         },
+        'brand': {
+          primary: '#F5793B',    // Main orange-coral gradient
+          secondary: '#7c161c',  // Deep red
+          dark: '#250608',       // Almost black
+          light: '#f79a6b',      // Light peach
+          accent: '#f1580c',     // Bright orange
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],

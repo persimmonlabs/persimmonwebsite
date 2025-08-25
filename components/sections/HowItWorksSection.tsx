@@ -30,7 +30,7 @@ const steps = [
 
 export const HowItWorksSection: React.FC = () => {
   return (
-    <SectionContainer className="py-20 bg-white">
+    <SectionContainer className="py-20 bg-black">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -38,10 +38,10 @@ export const HowItWorksSection: React.FC = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
           How It Works
         </h2>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
           Four simple steps to content automation paradise
         </p>
       </motion.div>
@@ -59,15 +59,15 @@ export const HowItWorksSection: React.FC = () => {
               className="text-center"
             >
               <div className="relative">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-100 to-red-100 rounded-full flex items-center justify-center">
-                  <Icon className="w-8 h-8 text-orange-600" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-brand-primary/20 to-brand-accent/20 rounded-full flex items-center justify-center border border-brand-primary/30">
+                  <Icon className="w-8 h-8 text-brand-primary" />
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-orange-200 to-red-200" />
+                  <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-brand-primary/30 to-brand-accent/30" />
                 )}
               </div>
-              <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-              <p className="text-gray-600 text-sm">{step.description}</p>
+              <h3 className="font-bold text-lg mb-2 text-white">{step.title}</h3>
+              <p className="text-gray-400 text-sm">{step.description}</p>
             </motion.div>
           )
         })}

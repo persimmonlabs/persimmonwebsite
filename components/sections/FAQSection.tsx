@@ -44,7 +44,7 @@ export const FAQSection: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0)
 
   return (
-    <SectionContainer className="py-20 bg-white">
+    <SectionContainer className="py-20 bg-gray-900">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -52,14 +52,14 @@ export const FAQSection: React.FC = () => {
         viewport={{ once: true }}
         className="text-center mb-12"
       >
-        <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-red-100 px-4 py-2 rounded-full mb-4">
-          <HelpCircle className="w-4 h-4 text-orange-600" />
+        <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-4 border border-white/20">
+          <HelpCircle className="w-4 h-4 text-brand-primary" />
           <span className="text-sm font-semibold">Frequently Asked Questions</span>
         </div>
-        <h2 className="text-4xl lg:text-5xl font-bold mb-4">
+        <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
           Got Questions? We&apos;ve Got Answers
         </h2>
-        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        <p className="text-xl text-gray-400 max-w-2xl mx-auto">
           Everything you need to know about automating your content
         </p>
       </motion.div>
@@ -76,15 +76,15 @@ export const FAQSection: React.FC = () => {
           >
             <button
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full bg-white rounded-lg p-6 text-left hover:shadow-md transition-shadow border border-gray-200"
+              className="w-full bg-gray-800 rounded-lg p-6 text-left hover:bg-gray-800/80 transition-all border border-gray-700"
             >
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg pr-4">{faq.question}</h3>
+                <h3 className="font-semibold text-lg pr-4 text-white">{faq.question}</h3>
                 <motion.div
                   animate={{ rotate: openIndex === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ChevronDown className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                  <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                 </motion.div>
               </div>
               <AnimatePresence>
@@ -96,7 +96,7 @@ export const FAQSection: React.FC = () => {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="text-gray-600 mt-4 leading-relaxed">
+                    <p className="text-gray-400 mt-4 leading-relaxed">
                       {faq.answer}
                     </p>
                   </motion.div>

@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Button } from './Button'
-import { Menu, X, Sparkles } from 'lucide-react'
+import Image from 'next/image'
+import { Menu, X, ArrowRight } from 'lucide-react'
 
 export const NavBar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -24,63 +24,58 @@ export const NavBar: React.FC = () => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled ? 'bg-white/95 backdrop-blur-md shadow-md' : 'bg-transparent'
+      isScrolled ? 'bg-black/90 backdrop-blur-md border-b border-white/10' : 'bg-transparent'
     }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <div className="flex items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-2"
-            >
-              <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">P</span>
-              </div>
-              <span className="font-bold text-xl">Persimmon Labs</span>
-            </motion.div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="flex items-center space-x-3"
+          >
+            <Image src="/logo.svg" alt="Persimmon Labs" width={40} height={40} />
+            <span className="font-semibold text-xl text-white">Persimmon Labs</span>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <button
               onClick={scrollToDemo}
-              className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
+              className="text-gray-300 hover:text-white transition-colors"
             >
-              Try Demo
+              Demo
             </button>
             <a
-              href="#use-cases"
-              className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
+              href="#solution"
+              className="text-gray-300 hover:text-white transition-colors"
             >
-              Use Cases
+              Solution
             </a>
             <a
               href="#faq"
-              className="text-gray-700 hover:text-orange-600 transition-colors font-medium"
+              className="text-gray-300 hover:text-white transition-colors"
             >
               FAQ
             </a>
-            <Button
-              size="sm"
+            <button
               onClick={scrollToDemo}
-              className="group"
+              className="px-6 py-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-brand-primary/50 transition-all duration-300 flex items-center"
             >
-              <Sparkles className="w-4 h-4 mr-1" />
-              Free Trial
-            </Button>
+              Get Started
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </button>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2"
+            className="md:hidden p-2 text-white"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
+              <X className="w-6 h-6" />
             ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
+              <Menu className="w-6 h-6" />
             )}
           </button>
         </div>
@@ -93,37 +88,35 @@ export const NavBar: React.FC = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t"
+            className="md:hidden bg-black/95 backdrop-blur-md border-t border-white/10"
           >
-            <div className="px-4 py-4 space-y-3">
+            <div className="px-4 py-6 space-y-4">
               <button
                 onClick={scrollToDemo}
-                className="block w-full text-left py-2 text-gray-700 hover:text-orange-600 transition-colors font-medium"
+                className="block w-full text-left py-2 text-gray-300 hover:text-white transition-colors"
               >
-                Try Demo
+                Demo
               </button>
               <a
-                href="#use-cases"
+                href="#solution"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 text-gray-700 hover:text-orange-600 transition-colors font-medium"
+                className="block py-2 text-gray-300 hover:text-white transition-colors"
               >
-                Use Cases
+                Solution
               </a>
               <a
                 href="#faq"
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="block py-2 text-gray-700 hover:text-orange-600 transition-colors font-medium"
+                className="block py-2 text-gray-300 hover:text-white transition-colors"
               >
                 FAQ
               </a>
-              <Button
-                size="sm"
+              <button
                 onClick={scrollToDemo}
-                className="w-full"
+                className="w-full px-6 py-3 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg"
               >
-                <Sparkles className="w-4 h-4 mr-1" />
-                Start Free Trial
-              </Button>
+                Get Started
+              </button>
             </div>
           </motion.div>
         )}

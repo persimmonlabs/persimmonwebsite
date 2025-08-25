@@ -2,7 +2,8 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { ArrowDown, Sparkles, Zap } from 'lucide-react'
+import { ArrowRight, Zap, Clock, DollarSign, Settings } from 'lucide-react'
+import Image from 'next/image'
 
 export const HeroSection: React.FC = () => {
   const scrollToDemo = () => {
@@ -10,109 +11,112 @@ export const HeroSection: React.FC = () => {
   }
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center px-4 pt-20 pb-12 overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-50 via-white to-red-50 -z-10" />
+    <section className="relative min-h-screen flex items-center justify-center px-4 pt-20 overflow-hidden bg-black">
+      {/* Subtle grid pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:14px_24px]" />
       
-      {/* Animated background shapes */}
-      <div className="absolute inset-0 -z-10">
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 90, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute top-1/4 -left-20 w-96 h-96 bg-gradient-to-br from-orange-200/20 to-red-200/20 rounded-full blur-3xl"
-        />
-        <motion.div
-          animate={{
-            scale: [1, 1.3, 1],
-            rotate: [0, -90, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "linear"
-          }}
-          className="absolute bottom-1/4 -right-20 w-96 h-96 bg-gradient-to-br from-red-200/20 to-orange-200/20 rounded-full blur-3xl"
-        />
-      </div>
+      {/* Gradient orb */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-primary/20 via-transparent to-transparent blur-3xl" />
 
-      <div className="max-w-5xl mx-auto text-center">
+      <div className="relative z-10 max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.8 }}
+          className="text-center"
         >
-          {/* Badge */}
+          {/* Logo */}
           <motion.div 
-            className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-100 to-red-100 px-4 py-2 rounded-full mb-6"
-            whileHover={{ scale: 1.05 }}
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 flex justify-center"
           >
-            <Sparkles className="w-4 h-4 text-orange-600" />
-            <span className="text-sm font-semibold text-gray-800">AI-Powered Content Automation</span>
-            <Zap className="w-4 h-4 text-red-600" />
+            <Image src="/logo.svg" alt="Persimmon Labs" width={80} height={80} />
           </motion.div>
 
           {/* Main headline */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            Turn One Upload Into
-            <span className="block mt-2 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent">
-              Weeks of Content
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
+            Your AI Content Team
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-accent">
+              Running 24/7 While You Sleep
             </span>
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Try it free in 60 seconds. Upload an image or URL, get 3 professional social posts instantly.
+          <p className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto font-light">
+            Automated content systems that work harder than any human team.
           </p>
 
-          {/* CTA Button */}
-          <motion.button
-            onClick={scrollToDemo}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="group relative px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-semibold text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <span className="flex items-center space-x-2">
-              <span>Try Free Demo Now</span>
-              <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-            </span>
-          </motion.button>
+          {/* Key value props */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+            >
+              <Settings className="w-8 h-8 text-brand-primary mb-3" />
+              <h3 className="text-white font-semibold mb-2">Set up once, runs forever</h3>
+              <p className="text-gray-400 text-sm">Automated workflows that never need manual intervention</p>
+            </motion.div>
 
-          {/* Trust indicators */}
-          <motion.div 
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+            >
+              <Clock className="w-8 h-8 text-brand-primary mb-3" />
+              <h3 className="text-white font-semibold mb-2">Posts while you sleep</h3>
+              <p className="text-gray-400 text-sm">24/7 content distribution across all platforms</p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+            >
+              <DollarSign className="w-8 h-8 text-brand-primary mb-3" />
+              <h3 className="text-white font-semibold mb-2">Fraction of the cost</h3>
+              <p className="text-gray-400 text-sm">Save 80% compared to agencies and VAs</p>
+            </motion.div>
+          </div>
+
+          {/* CTA Buttons */}
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
-            className="mt-8 flex flex-wrap justify-center items-center gap-6 text-sm text-gray-500"
+            transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <span className="flex items-center space-x-1">
-              <span className="text-green-600">✓</span>
-              <span>No credit card required</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <span className="text-green-600">✓</span>
-              <span>60-second setup</span>
-            </span>
-            <span className="flex items-center space-x-1">
-              <span className="text-green-600">✓</span>
-              <span>Real AI generation</span>
-            </span>
+            <button
+              onClick={scrollToDemo}
+              className="group px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg hover:shadow-2xl hover:shadow-brand-primary/50 transition-all duration-300"
+            >
+              <span className="flex items-center justify-center">
+                Try Free Demo
+                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </button>
+            <a
+              href="#dashboard"
+              className="px-8 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-semibold rounded-lg hover:bg-white/20 transition-all duration-300"
+            >
+              Dashboard Coming Q2 2026
+            </a>
           </motion.div>
-        </motion.div>
 
-        {/* Animated arrow pointing down */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <ArrowDown className="w-8 h-8 text-gray-400" />
+          {/* Trust indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="mt-12 text-gray-500 text-sm"
+          >
+            <p>Custom-built for your brand • AI trained on your voice</p>
+          </motion.div>
         </motion.div>
       </div>
     </section>
