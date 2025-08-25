@@ -7,6 +7,7 @@ import { ServicesSection } from '@/components/sections/ServicesSection'
 import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
 import { UseCasesSection } from '@/components/sections/UseCasesSection'
 import { PricingSection } from '@/components/sections/PricingSection'
+import { DashboardPreviewSection } from '@/components/sections/DashboardPreviewSection'
 import { TrustSection } from '@/components/sections/TrustSection'
 import { FAQSection } from '@/components/sections/FAQSection'
 import { CTASection } from '@/components/sections/CTASection'
@@ -22,6 +23,7 @@ export default function Home() {
       <HowItWorksSection />
       <UseCasesSection />
       <PricingSection />
+      <DashboardPreviewSection />
       <TrustSection />
       <FAQSection />
       <CTASection />
