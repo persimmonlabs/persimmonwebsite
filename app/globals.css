@@ -1,0 +1,31 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply text-gray-900 antialiased;
+  }
+}
+
+@layer utilities {
+  .gradient-persimmon {
+    @apply bg-gradient-to-r from-persimmon-orange via-persimmon-coral to-persimmon-red;
+  }
+  
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-persimmon-orange via-persimmon-coral to-persimmon-red;
+  }
+  
+  .gradient-bg-animated {
+    background: linear-gradient(-45deg, #510e12, #7c161c, #F5793B, #f1580c);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+}
