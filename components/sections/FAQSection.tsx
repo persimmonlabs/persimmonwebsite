@@ -57,7 +57,7 @@ export const FAQSection: React.FC = () => {
           <span className="text-sm font-semibold">Frequently Asked Questions</span>
         </div>
         <h2 className="text-4xl lg:text-5xl font-bold mb-4">
-          Got Questions? We've Got Answers
+          Got Questions? We&apos;ve Got Answers
         </h2>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
           Everything you need to know about automating your content

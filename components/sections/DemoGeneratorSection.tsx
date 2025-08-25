@@ -195,6 +195,7 @@ export const DemoGeneratorSection: React.FC = () => {
                       id="file-upload"
                     />
                     <label htmlFor="file-upload" className="cursor-pointer">
+                      {/* eslint-disable-next-line jsx-a11y/alt-text */}
                       <Image className="w-12 h-12 mx-auto mb-2 text-gray-400" />
                       <p className="text-sm text-gray-600">
                         {formData.uploadedFile ? formData.uploadedFile.name : 'Click to upload or drag and drop'}
