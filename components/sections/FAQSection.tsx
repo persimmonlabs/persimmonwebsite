@@ -7,36 +7,36 @@ import { ChevronDown, HelpCircle } from 'lucide-react'
 
 const faqs = [
   {
-    question: "How is this different from Buffer or Hootsuite?",
-    answer: "Those are scheduling tools - you still create all the content. We're an AI content creation system that generates, designs, and publishes everything automatically. You upload once, we create endless variations."
+    question: "How will this save me 20+ hours per week?",
+    answer: "Instead of spending hours writing captions, finding hashtags, and posting to each platform, you upload once and we create 50+ unique posts automatically. Most users go from 3 hours/day on content to 10 minutes/week."
   },
   {
-    question: "Will the content sound robotic or generic?",
-    answer: "No. Our AI learns your brand voice and style. Each post is unique, on-brand, and engaging. You can review and edit anything before it goes live, or let it run fully automated."
+    question: "Will people know it's AI-generated content?",
+    answer: "No. Our AI learns your exact writing style, brand voice, and personality. Each post is unique and sounds like you wrote it. You can review everything or let it run fully automated."
   },
   {
-    question: "What if I don't have any content to start with?",
-    answer: "No problem! We can work with just your website URL, product descriptions, or even just a brief about your business. Our AI creates original content from minimal input."
+    question: "How is this different from hiring a content writer?",
+    answer: "A content writer costs $3,000-5,000/month and creates 20-30 posts. We create unlimited content for $49/month, work 24/7, never get sick, and learn your brand voice perfectly."
   },
   {
-    question: "Can I review posts before they go live?",
-    answer: "Absolutely. You can choose full automation, approval mode (review everything), or smart mode (auto-approve certain types, review others). It's completely flexible."
+    question: "What if I don't have much content to start with?",
+    answer: "Perfect! We work with just your website, a few blog posts, or even a simple description of your business. Our AI creates original, engaging content from minimal input."
   },
   {
-    question: "How long does setup take?",
-    answer: "The free demo takes 60 seconds. Full setup takes about 2-3 hours of your time spread over a few days. After that, it runs forever without you."
+    question: "Can I still control what gets posted?",
+    answer: "Absolutely. Choose full automation, approval mode (review everything), or smart mode (auto-approve certain types, review others). It's your brand, your control."
   },
   {
-    question: "What platforms do you support?",
-    answer: "Instagram, LinkedIn, Twitter/X, Facebook, TikTok, and Pinterest. We're adding YouTube Shorts and Threads soon. Everything posts from one upload."
+    question: "How quickly can I see results?",
+    answer: "The demo works in 60 seconds. Full setup takes 2-3 hours over a few days. Once configured, you'll have weeks of content ready and posting automatically."
   },
   {
-    question: "Is there a contract or can I cancel anytime?",
-    answer: "No contracts, cancel anytime. We offer a 7-day free trial and a 30-day money-back guarantee. We're confident you'll love it."
+    question: "Which platforms will this work with?",
+    answer: "Instagram, LinkedIn, Twitter/X, Facebook, TikTok, and Pinterest. One upload creates optimized posts for every platform. We're adding YouTube Shorts and Threads soon."
   },
   {
-    question: "How much content can you generate?",
-    answer: "Our Growth plan includes unlimited posts. Most clients post 1-2 times per day per platform. The AI can generate hundreds of variations from a single upload."
+    question: "What if I don't like the results?",
+    answer: "We offer a 7-day free trial and 30-day money-back guarantee. No contracts, cancel anytime. Most users see 3x more engagement within the first week."
   }
 ]
 
@@ -53,14 +53,14 @@ export const FAQSection: React.FC = () => {
         className="text-center mb-12"
       >
         <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-4 border border-white/20">
-          <HelpCircle className="w-4 h-4 text-brand-primary" />
+          <HelpCircle className="w-4 h-4 text-persimmon-coral" />
           <span className="text-sm font-semibold">Frequently Asked Questions</span>
         </div>
         <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
-          Got Questions? We&apos;ve Got Answers
+          Your Questions About Saving 20+ Hours/Week
         </h2>
         <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-          Everything you need to know about automating your content
+          Real answers about how our AI creates content that sounds like you
         </p>
       </motion.div>
 
@@ -117,7 +117,7 @@ export const FAQSection: React.FC = () => {
         <p className="text-gray-600 mb-4">Still have questions?</p>
         <a
           href="mailto:hello@persimmonlabs.cc"
-          className="text-orange-600 font-semibold hover:text-orange-700 transition-colors"
+          className="text-persimmon-coral font-semibold hover:text-persimmon-orange transition-colors"
         >
           Email us at hello@persimmonlabs.cc
         </a>

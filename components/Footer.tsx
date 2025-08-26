@@ -27,7 +27,7 @@ export const Footer: React.FC = () => {
             <div className="flex space-x-4">
               <a
                 href="mailto:hello@persimmonlabs.cc"
-                className="text-gray-400 hover:text-brand-primary transition-colors"
+                className="text-gray-400 hover:text-persimmon-coral transition-colors"
                 aria-label="Email"
               >
                 <Mail className="w-5 h-5" />
@@ -36,7 +36,7 @@ export const Footer: React.FC = () => {
                 href="https://linkedin.com/company/persimmonlabs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-brand-primary transition-colors"
+                className="text-gray-400 hover:text-persimmon-coral transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
@@ -45,7 +45,7 @@ export const Footer: React.FC = () => {
                 href="https://twitter.com/persimmonlabs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-brand-primary transition-colors"
+                className="text-gray-400 hover:text-persimmon-coral transition-colors"
                 aria-label="Twitter"
               >
                 <Twitter className="w-5 h-5" />
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3 md:justify-end">
               <button
                 onClick={scrollToDemo}
-                className="px-6 py-2 bg-gradient-to-r from-brand-primary to-brand-accent rounded-full font-semibold hover:shadow-lg hover:shadow-brand-primary/50 transition-all"
+                className="px-6 py-2 bg-gradient-to-r from-persimmon-coral to-persimmon-orange rounded-full font-semibold hover:shadow-lg hover:shadow-persimmon-coral/50 transition-all"
               >
                 Try Free Demo
               </button>
@@ -84,10 +84,10 @@ export const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
             <p>© 2024 Persimmon Labs. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="/privacy" className="hover:text-brand-primary transition-colors">
+              <a href="/privacy" className="hover:text-persimmon-coral transition-colors">
                 Privacy Policy
               </a>
-              <a href="/terms" className="hover:text-brand-primary transition-colors">
+              <a href="/terms" className="hover:text-persimmon-coral transition-colors">
                 Terms of Service
               </a>
             </div>

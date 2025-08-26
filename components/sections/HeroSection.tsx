@@ -16,7 +16,7 @@ export const HeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff06_1px,transparent_1px),linear-gradient(to_bottom,#ffffff06_1px,transparent_1px)] bg-[size:14px_24px]" />
       
       {/* Gradient orb */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-primary/20 via-transparent to-transparent blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-persimmon-coral/20 via-transparent to-transparent blur-3xl" />
 
       <div className="relative z-10 max-w-7xl mx-auto">
         <motion.div
@@ -38,7 +38,7 @@ export const HeroSection: React.FC = () => {
           {/* Main headline */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight">
             Your AI Content Team
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-accent">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-persimmon-coral to-persimmon-orange">
               Running 24/7 While You Sleep
             </span>
           </h1>
@@ -56,7 +56,7 @@ export const HeroSection: React.FC = () => {
               transition={{ delay: 0.2 }}
               className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
             >
-              <Settings className="w-8 h-8 text-brand-primary mb-3" />
+              <Settings className="w-8 h-8 text-persimmon-coral mb-3" />
               <h3 className="text-white font-semibold mb-2">Set up once, runs forever</h3>
               <p className="text-gray-400 text-sm">Automated workflows that never need manual intervention</p>
             </motion.div>
@@ -67,7 +67,7 @@ export const HeroSection: React.FC = () => {
               transition={{ delay: 0.3 }}
               className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
             >
-              <Clock className="w-8 h-8 text-brand-primary mb-3" />
+              <Clock className="w-8 h-8 text-persimmon-coral mb-3" />
               <h3 className="text-white font-semibold mb-2">Posts while you sleep</h3>
               <p className="text-gray-400 text-sm">24/7 content distribution across all platforms</p>
             </motion.div>
@@ -78,7 +78,7 @@ export const HeroSection: React.FC = () => {
               transition={{ delay: 0.4 }}
               className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6"
             >
-              <DollarSign className="w-8 h-8 text-brand-primary mb-3" />
+              <DollarSign className="w-8 h-8 text-persimmon-coral mb-3" />
               <h3 className="text-white font-semibold mb-2">Fraction of the cost</h3>
               <p className="text-gray-400 text-sm">Save 80% compared to agencies and VAs</p>
             </motion.div>
@@ -93,7 +93,7 @@ export const HeroSection: React.FC = () => {
           >
             <button
               onClick={scrollToDemo}
-              className="group px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg hover:shadow-2xl hover:shadow-brand-primary/50 transition-all duration-300"
+              className="group px-8 py-4 bg-gradient-to-r from-persimmon-coral to-persimmon-orange text-white font-semibold rounded-lg hover:shadow-2xl hover:shadow-persimmon-coral/50 transition-all duration-300"
             >
               <span className="flex items-center justify-center">
                 Try Free Demo

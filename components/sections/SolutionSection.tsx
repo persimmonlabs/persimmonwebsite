@@ -98,7 +98,7 @@ export const SolutionSection: React.FC = () => {
         >
           <button
             onClick={scrollToDemo}
-            className="group px-8 py-4 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold text-lg rounded-lg hover:shadow-2xl hover:shadow-brand-primary/50 transition-all duration-300"
+            className="group px-8 py-4 bg-gradient-to-r from-persimmon-coral to-persimmon-orange text-white font-semibold text-lg rounded-lg hover:shadow-2xl hover:shadow-persimmon-coral/50 transition-all duration-300"
           >
             <span className="flex items-center">
               See It In Action

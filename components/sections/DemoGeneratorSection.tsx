@@ -130,11 +130,11 @@ export const DemoGeneratorSection: React.FC = () => {
           className="text-center mb-12"
         >
           <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-4 border border-white/20">
-            <Sparkles className="w-4 h-4 text-brand-primary" />
+            <Sparkles className="w-4 h-4 text-persimmon-coral" />
             <span className="text-sm font-semibold">Free Demo Generator</span>
           </div>
           <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-white">
-            Try It Now - <span className="bg-gradient-to-r from-brand-primary to-brand-accent bg-clip-text text-transparent">60 Seconds</span>
+            Try It Now - <span className="bg-gradient-to-r from-persimmon-coral to-persimmon-orange bg-clip-text text-transparent">60 Seconds</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Upload your content, tell us about your brand, and watch AI create professional social posts instantly.
@@ -152,13 +152,13 @@ export const DemoGeneratorSection: React.FC = () => {
                     opacity: step >= num ? 1 : 0.5
                   }}
                   className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all ${
-                    step >= num ? 'bg-gradient-to-r from-brand-primary to-brand-accent text-white' : 'bg-gray-700 text-gray-400'
+                    step >= num ? 'bg-gradient-to-r from-persimmon-coral to-persimmon-orange text-white' : 'bg-gray-700 text-gray-400'
                   }`}
                 >
                   {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
                 </motion.div>
                 {num < 4 && (
-                  <div className={`w-20 h-1 rounded ${step > num ? 'bg-brand-primary' : 'bg-gray-700'}`} />
+                  <div className={`w-20 h-1 rounded ${step > num ? 'bg-persimmon-coral' : 'bg-gray-700'}`} />
                 )}
               </React.Fragment>
             ))}
@@ -176,7 +176,7 @@ export const DemoGeneratorSection: React.FC = () => {
               className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
               <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
-                <Upload className="w-6 h-6 mr-2 text-brand-primary" />
+                <Upload className="w-6 h-6 mr-2 text-persimmon-coral" />
                 Step 1: Upload Your Content
               </h3>
               
@@ -186,7 +186,7 @@ export const DemoGeneratorSection: React.FC = () => {
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     Upload Image (Optional)
                   </label>
-                  <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-brand-primary transition-colors bg-gray-800/50">
+                  <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-persimmon-coral transition-colors bg-gray-800/50">
                     <input
                       type="file"
                       accept="image/*"
@@ -217,7 +217,7 @@ export const DemoGeneratorSection: React.FC = () => {
                       placeholder="https://example.com/article"
                       value={formData.url}
                       onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-                      className="w-full pl-10 pr-3 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                      className="w-full pl-10 pr-3 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -225,21 +225,21 @@ export const DemoGeneratorSection: React.FC = () => {
 
               {/* Description */}
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   What would you like to create?
                 </label>
                 <textarea
                   placeholder="E.g., Promote our new coffee blend launch, share a customer success story, announce a workshop..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
                   rows={3}
                 />
               </div>
 
               {/* Content Goal */}
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   <Target className="inline w-4 h-4 mr-1" />
                   Content Goal
                 </label>
@@ -250,8 +250,8 @@ export const DemoGeneratorSection: React.FC = () => {
                       onClick={() => setFormData({ ...formData, contentGoal: goal })}
                       className={`px-4 py-2 rounded-lg border-2 transition-all ${
                         formData.contentGoal === goal
-                          ? 'border-orange-500 bg-orange-50 text-orange-700'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-persimmon-coral bg-persimmon-coral/10 text-persimmon-coral'
+                          : 'border-gray-700 hover:border-gray-600 text-gray-400'
                       }`}
                     >
                       {goal.replace('_', ' ').charAt(0).toUpperCase() + goal.replace('_', ' ').slice(1)}
@@ -282,7 +282,7 @@ export const DemoGeneratorSection: React.FC = () => {
               className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
               <h3 className="text-2xl font-bold mb-6 flex items-center">
-                <Palette className="w-6 h-6 mr-2 text-orange-600" />
+                <Palette className="w-6 h-6 mr-2 text-persimmon-coral" />
                 Step 2: Brand & Platforms
               </h3>
 
@@ -297,7 +297,7 @@ export const DemoGeneratorSection: React.FC = () => {
                     placeholder="Your Company"
                     value={formData.brandName}
                     onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
                   />
                 </div>
 
@@ -311,14 +311,14 @@ export const DemoGeneratorSection: React.FC = () => {
                     placeholder="#FF6B35, #004E98"
                     value={formData.brandColors}
                     onChange={(e) => setFormData({ ...formData, brandColors: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
                   />
                 </div>
               </div>
 
               {/* Voice Tone */}
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   <Type className="inline w-4 h-4 mr-1" />
                   Voice Tone
                 </label>
@@ -329,8 +329,8 @@ export const DemoGeneratorSection: React.FC = () => {
                       onClick={() => setFormData({ ...formData, voiceTone: tone })}
                       className={`px-4 py-2 rounded-lg border-2 transition-all ${
                         formData.voiceTone === tone
-                          ? 'border-orange-500 bg-orange-50 text-orange-700'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-persimmon-coral bg-persimmon-coral/10 text-persimmon-coral'
+                          : 'border-gray-700 hover:border-gray-600 text-gray-400'
                       }`}
                     >
                       {tone.charAt(0).toUpperCase() + tone.slice(1)}
@@ -341,7 +341,7 @@ export const DemoGeneratorSection: React.FC = () => {
 
               {/* Platforms */}
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Select Platforms
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -394,7 +394,7 @@ export const DemoGeneratorSection: React.FC = () => {
 
               {/* Email */}
               <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
                   Email (to receive your content)
                 </label>
                 <input
@@ -402,7 +402,7 @@ export const DemoGeneratorSection: React.FC = () => {
                   placeholder="you@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
                   required
                 />
               </div>
@@ -435,13 +435,13 @@ export const DemoGeneratorSection: React.FC = () => {
               animate={{ opacity: 1, scale: 1 }}
               className="bg-white rounded-2xl shadow-lg p-12 text-center"
             >
-              <Loader2 className="w-16 h-16 mx-auto mb-4 text-orange-600 animate-spin" />
+              <Loader2 className="w-16 h-16 mx-auto mb-4 text-persimmon-coral animate-spin" />
               <h3 className="text-2xl font-bold mb-2">Cooking Your Content...</h3>
               <p className="text-gray-600">Our AI is crafting the perfect posts for your brand</p>
               <div className="mt-6 flex justify-center space-x-2">
-                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-2 h-2 bg-orange-600 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-2 h-2 bg-persimmon-coral rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 bg-persimmon-coral rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 bg-persimmon-coral rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
             </motion.div>
           )}
@@ -496,7 +496,7 @@ export const DemoGeneratorSection: React.FC = () => {
                     onClick={() => setSelectedPlatform(content.platform)}
                     className={`px-4 py-2 font-medium transition-all ${
                       selectedPlatform === content.platform
-                        ? 'text-orange-600 border-b-2 border-orange-600'
+                        ? 'text-persimmon-coral border-b-2 border-persimmon-coral'
                         : 'text-gray-500 hover:text-gray-700'
                     }`}
                   >
@@ -518,7 +518,7 @@ export const DemoGeneratorSection: React.FC = () => {
                           onClick={() => setSelectedVariant(index)}
                           className={`px-3 py-1 rounded-lg text-sm font-medium transition-all ${
                             selectedVariant === index
-                              ? 'bg-orange-600 text-white'
+                              ? 'bg-persimmon-coral text-white'
                               : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                           }`}
                         >
@@ -560,7 +560,7 @@ export const DemoGeneratorSection: React.FC = () => {
                       )}
                       
                       {content.variants[selectedVariant].cta && (
-                        <div className="bg-gradient-to-r from-orange-100 to-red-100 rounded-lg p-3 inline-block">
+                        <div className="bg-gradient-to-r from-persimmon-peach/20 to-persimmon-coral/20 rounded-lg p-3 inline-block">
                           <span className="text-sm font-medium text-gray-800">
                             {content.variants[selectedVariant].cta}
                           </span>
@@ -571,7 +571,7 @@ export const DemoGeneratorSection: React.FC = () => {
                 ))}
 
               {/* CTAs */}
-              <div className="mt-8 p-6 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg">
+              <div className="mt-8 p-6 bg-gradient-to-r from-persimmon-peach/10 to-persimmon-coral/10 rounded-lg border border-persimmon-coral/20">
                 <h4 className="text-lg font-bold mb-2">Ready to automate your content?</h4>
                 <p className="text-gray-600 mb-4">
                   This is just a taste of what Persimmon Labs can do. Get content like this every day, automatically.

@@ -60,9 +60,9 @@ export const NavBar: React.FC = () => {
             </a>
             <button
               onClick={scrollToDemo}
-              className="px-6 py-2 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-brand-primary/50 transition-all duration-300 flex items-center"
+              className="px-6 py-2 bg-gradient-to-r from-persimmon-coral to-persimmon-orange text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-persimmon-coral/50 transition-all duration-300 flex items-center"
             >
-              Get Started
+              Try Free Demo
               <ArrowRight className="ml-2 w-4 h-4" />
             </button>
           </div>
@@ -113,9 +113,9 @@ export const NavBar: React.FC = () => {
               </a>
               <button
                 onClick={scrollToDemo}
-                className="w-full px-6 py-3 bg-gradient-to-r from-brand-primary to-brand-accent text-white font-semibold rounded-lg"
+                className="w-full px-6 py-3 bg-gradient-to-r from-persimmon-coral to-persimmon-orange text-white font-semibold rounded-lg"
               >
-                Get Started
+                Try Free Demo
               </button>
             </div>
           </motion.div>

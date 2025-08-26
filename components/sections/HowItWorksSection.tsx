@@ -59,11 +59,11 @@ export const HowItWorksSection: React.FC = () => {
               className="text-center"
             >
               <div className="relative">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-brand-primary/20 to-brand-accent/20 rounded-full flex items-center justify-center border border-brand-primary/30">
-                  <Icon className="w-8 h-8 text-brand-primary" />
+                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-persimmon-coral/20 to-persimmon-orange/20 rounded-full flex items-center justify-center border border-persimmon-coral/30">
+                  <Icon className="w-8 h-8 text-persimmon-coral" />
                 </div>
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-brand-primary/30 to-brand-accent/30" />
+                  <div className="hidden md:block absolute top-8 left-full w-full h-0.5 bg-gradient-to-r from-persimmon-coral/30 to-persimmon-orange/30" />
                 )}
               </div>
               <h3 className="font-bold text-lg mb-2 text-white">{step.title}</h3>
