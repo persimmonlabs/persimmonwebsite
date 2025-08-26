@@ -73,7 +73,9 @@ export async function POST(req: NextRequest) {
 }
 
 // Alternative: Direct Google Sheets API (requires service account)
-export async function POST_WITH_SERVICE_ACCOUNT(req: NextRequest) {
+// Uncomment and rename to POST to use this method instead
+// export async function POST_WITH_SERVICE_ACCOUNT(req: NextRequest) {
+async function POST_WITH_SERVICE_ACCOUNT_EXAMPLE(req: NextRequest) {
   try {
     const body = await req.json()
     const { email, source = 'website', type = 'demo' } = body
