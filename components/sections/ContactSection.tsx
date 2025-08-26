@@ -55,7 +55,7 @@ export const ContactSection: React.FC = () => {
             <span className="block gradient-text mt-2">Social Content Again?</span>
           </h2>
           <p className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto">
-            Tell us about your content goals and we'll show you exactly how to 10x your output while working less.
+            Tell us about your content goals and we&apos;ll show you exactly how to 10x your output while working less.
           </p>
         </motion.div>
 
@@ -220,7 +220,7 @@ export const ContactSection: React.FC = () => {
             Want to See Results in 60 Seconds?
           </h3>
           <p className="text-gray-400 mb-6 max-w-2xl mx-auto">
-            Skip the form and send us a quick email about your content goals. We'll show you exactly how to save 20+ hours per week with a personalized demo.
+            Skip the form and send us a quick email about your content goals. We&apos;ll show you exactly how to save 20+ hours per week with a personalized demo.
           </p>
           <a 
             href="mailto:hello@persimmonlabs.com?subject=Show Me How to Save 20+ Hours/Week&body=Hi Persimmon Labs team,%0D%0A%0D%0AI want to see how your AI can help me save 20+ hours per week on content creation.%0D%0A%0D%0ACurrent situation:%0D%0AI spend ___ hours/week writing social media content%0D%0AI want to post ___ times per day%0D%0AMy main platforms are: ____%0D%0A%0D%0APlease show me how to automate this!%0D%0A%0D%0AThanks!"

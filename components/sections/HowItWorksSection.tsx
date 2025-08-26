@@ -120,7 +120,7 @@ export const HowItWorksSection: React.FC = () => {
             <div>
               <BarChart3 className="w-8 h-8 text-persimmon-coral mx-auto mb-3" />
               <h4 className="font-bold text-white mb-1">Results Guaranteed</h4>
-              <p className="text-gray-400 text-sm">30-day money back if you don't see 10x content output</p>
+              <p className="text-gray-400 text-sm">30-day money back if you don&apos;t see 10x content output</p>
             </div>
           </div>
         </motion.div>

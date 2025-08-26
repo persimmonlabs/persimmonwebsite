@@ -82,7 +82,7 @@ export const DemoFormStep1: React.FC<Pick<DemoFormProps, 'formData' | 'setFormDa
               htmlFor="file-upload"
               className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-brand-primary/30 rounded-xl cursor-pointer bg-gradient-to-br from-brand-dark/40 to-transparent hover:from-brand-dark/40 transition-all"
             >
-              <Image className="w-8 h-8 text-brand-primary mb-2" />
+              <Image className="w-8 h-8 text-brand-primary mb-2" aria-label="Upload image" />
               <p className="text-sm text-gray-300">
                 {formData.uploadedFile ? formData.uploadedFile.name : 'Click to upload or drag and drop'}
               </p>
