@@ -1,221 +1,218 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { generateBrandBrief, generateContentVariants } from '@/lib/ai/content-generator';
+import { v4 as uuidv4 } from 'uuid';
 
-// Simple in-memory rate limiting (in production, use Redis or similar)
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+// Validation schema
+const DemoRequestSchema = z.object({
+  brandName: z.string().min(2).max(50),
+  email: z.string().email(),
+  industry: z.enum([
+    'ecommerce', 'saas', 'agency', 'fitness', 
+    'restaurant', 'services', 'realestate', 
+    'healthcare', 'education', 'other'
+  ]),
+  tone: z.enum(['professional', 'friendly', 'playful', 'bold']),
+  platforms: z.array(
+    z.enum(['instagram', 'linkedin', 'twitter', 'facebook'])
+  ).min(1).max(4),
+  website: z.string().url().optional().or(z.literal('')),
+  consent: z.boolean(),
+  otherIndustry: z.string().optional()
+});
 
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now()
-  const limit = rateLimitMap.get(ip)
+// Rate limiting (simple in-memory for now)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+function checkRateLimit(identifier: string): boolean {
+  const now = Date.now();
+  const limit = rateLimitMap.get(identifier);
   
   if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(ip, {
+    // Reset or create new limit
+    rateLimitMap.set(identifier, {
       count: 1,
-      resetTime: now + 60000 // 1 minute window
-    })
-    return true
+      resetTime: now + 3600000 // 1 hour from now
+    });
+    return true;
   }
   
-  if (limit.count >= 5) { // 5 requests per minute
-    return false
+  if (limit.count >= 3) {
+    return false; // Rate limit exceeded
   }
   
-  limit.count++
-  return true
-}
-
-function generatePlatformContent(
-  platform: string,
-  brandName: string,
-  voiceTone: string,
-  contentGoal: string,
-  description: string
-) {
-  // Voice tone variations
-  const toneStyles = {
-    professional: {
-      prefix: '📊',
-      style: 'formal and authoritative',
-      cta: 'Learn more →'
-    },
-    friendly: {
-      prefix: '👋',
-      style: 'warm and conversational',
-      cta: 'Join us today! 🎉'
-    },
-    playful: {
-      prefix: '🎨',
-      style: 'fun and energetic',
-      cta: 'Let\'s go! 🚀'
-    },
-    bold: {
-      prefix: '⚡',
-      style: 'confident and direct',
-      cta: 'Take action now.'
-    }
-  }
-
-  // Content goal templates
-  const goalTemplates = {
-    awareness: {
-      focus: 'introducing and educating',
-      hashtags: ['#BrandAwareness', '#DiscoverMore', '#Innovation', '#TechTrends']
-    },
-    lead_gen: {
-      focus: 'capturing interest and contact info',
-      hashtags: ['#FreeDemo', '#GetStarted', '#LimitedOffer', '#TryItNow']
-    },
-    launch: {
-      focus: 'announcing new products or features',
-      hashtags: ['#ProductLaunch', '#NewRelease', '#ComingSoon', '#Innovation']
-    },
-    promo: {
-      focus: 'promoting special offers',
-      hashtags: ['#SpecialOffer', '#LimitedTime', '#Discount', '#DealOfTheDay']
-    }
-  }
-
-  const tone = toneStyles[voiceTone as keyof typeof toneStyles] || toneStyles.friendly
-  const goal = goalTemplates[contentGoal as keyof typeof goalTemplates] || goalTemplates.awareness
-
-  // Platform-specific content generation
-  const platformTemplates = {
-    instagram: [
-      {
-        caption: `${tone.prefix} ${brandName} is ${goal.focus} about ${description || 'something amazing'}!\n\n✨ Discover what makes us different\n🎯 Built with your needs in mind\n💫 Join our growing community\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#Instagram', '#InstaGood'],
-        cta: tone.cta
-      },
-      {
-        caption: `Looking for ${description || 'innovation'}? ${brandName} has you covered! 🌟\n\n• Trusted by forward-thinkers\n• Designed for real results\n• Ready when you are\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#InstaBusiness', '#Success'],
-        cta: tone.cta
-      },
-      {
-        caption: `Transform your ${contentGoal === 'launch' ? 'experience' : 'workflow'} with ${brandName}! 💡\n\n${description || 'Discover the difference'}\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#Transformation', '#Growth'],
-        cta: tone.cta
-      }
-    ],
-    linkedin: [
-      {
-        caption: `${brandName} is proud to announce: ${description || 'our latest innovation'}.\n\nIn today's fast-paced business environment, staying ahead means embracing change. That's why we've developed solutions that adapt to your needs.\n\nKey benefits:\n• Increased efficiency\n• Measurable ROI\n• Seamless integration\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#LinkedIn', '#B2B', '#BusinessGrowth'],
-        cta: tone.cta
-      },
-      {
-        caption: `Exciting developments at ${brandName}! We're ${goal.focus} about ${description || 'transformative solutions'}.\n\nOur approach combines innovation with practicality, delivering results that matter to your bottom line.\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#ProfessionalGrowth', '#Industry'],
-        cta: tone.cta
-      },
-      {
-        caption: `${brandName} insight: ${description || 'The future of business is here'}.\n\nJoin industry leaders who are already benefiting from our innovative approach.\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#ThoughtLeadership', '#Innovation'],
-        cta: tone.cta
-      }
-    ],
-    twitter: [
-      {
-        caption: `🔥 ${brandName}: ${description || 'Making waves in the industry'}!\n\n${tone.cta}`,
-        hashtags: goal.hashtags.slice(0, 3), // Twitter has hashtag limits
-        cta: tone.cta
-      },
-      {
-        caption: `Big news from ${brandName}! 📢 ${description || 'Something exciting is coming'}. Don't miss out!\n\n${tone.cta}`,
-        hashtags: goal.hashtags.slice(0, 3),
-        cta: tone.cta
-      },
-      {
-        caption: `${tone.prefix} ${description || 'Innovation delivered'} - ${brandName}\n\n${tone.cta}`,
-        hashtags: goal.hashtags.slice(0, 2),
-        cta: tone.cta
-      }
-    ],
-    facebook: [
-      {
-        caption: `${tone.prefix} Friends, we're excited to share ${description || 'something special'} from ${brandName}!\n\nWe believe in ${goal.focus} that truly makes a difference in your life. Come see what we're all about!\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#Facebook', '#Community'],
-        cta: tone.cta
-      },
-      {
-        caption: `${brandName} update! 🎉\n\n${description || 'Great things are happening'}, and we want you to be part of it. Join our community and discover the difference.\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#FacebookBusiness'],
-        cta: tone.cta
-      },
-      {
-        caption: `Your journey with ${brandName} starts here! ${tone.prefix}\n\n${description || 'Experience innovation like never before'}.\n\n${tone.cta}`,
-        hashtags: [...goal.hashtags, '#JoinUs'],
-        cta: tone.cta
-      }
-    ]
-  }
-
-  return platformTemplates[platform as keyof typeof platformTemplates] || platformTemplates.instagram
+  limit.count++;
+  return true;
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Get client IP for rate limiting
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
+    // Parse and validate request body
+    const body = await request.json();
+    const validatedData = DemoRequestSchema.parse(body);
     
-    // Check rate limit
-    if (!checkRateLimit(ip)) {
+    // Check consent
+    if (!validatedData.consent) {
       return NextResponse.json(
-        { error: 'Rate limit exceeded. Please try again later.' },
-        { status: 429 }
-      )
-    }
-
-    const body = await request.json()
-    const {
-      description,
-      brandName,
-      voiceTone,
-      contentGoal,
-      platforms,
-      url
-    } = body
-
-    // Validate required fields
-    if (!platforms || platforms.length === 0) {
-      return NextResponse.json(
-        { error: 'Please select at least one platform' },
+        { error: 'Marketing consent is required' },
         { status: 400 }
-      )
+      );
     }
-
-    // Generate content for each platform
-    const generatedContent = platforms.map((platform: string) => ({
-      platform,
-      variants: generatePlatformContent(
+    
+    // Rate limiting by email
+    if (!checkRateLimit(validatedData.email)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again in an hour.' },
+        { status: 429 }
+      );
+    }
+    
+    // Generate unique demo ID
+    const demoId = uuidv4();
+    const publicToken = uuidv4();
+    
+    // Determine industry context
+    const industryContext = validatedData.industry === 'other' 
+      ? validatedData.otherIndustry || 'business'
+      : validatedData.industry;
+    
+    console.log(`Generating demo ${demoId} for ${validatedData.brandName}`);
+    
+    // Check if OpenAI is configured
+    if (!process.env.OPENAI_API_KEY) {
+      console.log('OpenAI not configured, returning enhanced mock data');
+      return NextResponse.json({
+        demoId,
+        content: generateMockContent(validatedData),
+        shareableLink: '#',
+        message: 'Demo mode - using mock content (OpenAI not configured)'
+      });
+    }
+    
+    // Generate brand brief
+    const brandBrief = await generateBrandBrief({
+      brandName: validatedData.brandName,
+      industry: industryContext,
+      tone: validatedData.tone,
+      website: validatedData.website
+    });
+    
+    console.log('Brand brief generated:', brandBrief);
+    
+    // Generate content for each platform in parallel
+    const contentPromises = validatedData.platforms.map(async (platform) => {
+      const variants = await generateContentVariants(
         platform,
-        brandName || 'Your Brand',
-        voiceTone || 'friendly',
-        contentGoal || 'awareness',
-        description
-      )
-    }))
-
-    // In a real implementation, you would:
-    // 1. Call OpenAI or Claude API here for actual AI generation
-    // 2. Store the generated content in a database
-    // 3. Track usage for analytics
-
+        brandBrief,
+        validatedData.brandName,
+        industryContext,
+        3 // Generate 3 variants per platform
+      );
+      
+      return {
+        platform,
+        variants: variants.map(v => ({
+          caption: v.caption,
+          hashtags: v.hashtags,
+          cta: v.cta
+        }))
+      };
+    });
+    
+    const content = await Promise.all(contentPromises);
+    
+    console.log(`Generated content for ${content.length} platforms`);
+    
+    // Return results
+    const shareableLink = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/demo/${publicToken}`;
+    
     return NextResponse.json({
-      success: true,
-      content: generatedContent,
-      generated_at: new Date().toISOString()
-    })
-
+      demoId,
+      content,
+      shareableLink,
+      message: 'Content generated successfully!'
+    });
+    
   } catch (error) {
-    console.error('Content generation error:', error)
+    console.error('Error in demo generation:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: error.errors },
+        { status: 400 }
+      );
+    }
+    
     return NextResponse.json(
       { error: 'Failed to generate content. Please try again.' },
       { status: 500 }
-    )
+    );
   }
 }
 
-// Handle preflight requests
+// Enhanced mock content generator for testing without OpenAI
+function generateMockContent(data: any) {
+  const { brandName, industry, tone, platforms } = data;
+  const industryContext = industry === 'other' ? data.otherIndustry || 'business' : industry;
+  
+  const toneVariations = {
+    professional: {
+      style: 'formal',
+      emojis: ['📊', '💼', '🎯'],
+      cta: 'Learn more about our solutions →'
+    },
+    friendly: {
+      style: 'warm',
+      emojis: ['🌟', '✨', '🤝'],
+      cta: 'Let\'s connect and grow together!'
+    },
+    playful: {
+      style: 'fun',
+      emojis: ['🎉', '🚀', '💫'],
+      cta: 'Jump in and join the fun!'
+    },
+    bold: {
+      style: 'strong',
+      emojis: ['💪', '⚡', '🔥'],
+      cta: 'Take charge. Start now.'
+    }
+  };
+  
+  const toneData = toneVariations[tone] || toneVariations.friendly;
+  
+  return platforms.map((platform: string) => ({
+    platform,
+    variants: [
+      {
+        caption: tone === 'professional' 
+          ? `${brandName} delivers cutting-edge solutions for the ${industryContext} industry. Our data-driven approach ensures measurable results and sustainable growth.\n\n${toneData.emojis[0]} Strategic innovation\n${toneData.emojis[1]} Proven expertise\n${toneData.emojis[2]} Exceptional ROI`
+          : tone === 'playful'
+          ? `Hey ${industryContext} friends! ${toneData.emojis[0]} ${brandName} is here to shake things up!\n\nWe're not your average solution - we're the game-changer you've been waiting for! ${toneData.emojis[1]}\n\nReady to revolutionize your world? ${toneData.emojis[2]}`
+          : tone === 'bold'
+          ? `${brandName} doesn't follow trends. We set them. ${toneData.emojis[0]}\n\nWhile others talk, we deliver results in the ${industryContext} space.\n\n${toneData.emojis[1]} Disrupting the status quo\n${toneData.emojis[2]} Leading the charge`
+          : `Welcome to ${brandName}! ${toneData.emojis[0]} We're passionate about helping ${industryContext} businesses thrive.\n\nOur approach? Simple, effective, and tailored just for you. ${toneData.emojis[1]}\n\nTogether, we'll achieve amazing things! ${toneData.emojis[2]}`,
+        hashtags: platform === 'linkedin' 
+          ? ['#B2B', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}`, '#Innovation', '#Leadership']
+          : platform === 'twitter'
+          ? ['#Innovation', `#${industryContext}`]
+          : ['#BusinessGrowth', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}Tech`, '#Success', '#Innovation', '#Transformation'],
+        cta: toneData.cta
+      },
+      {
+        caption: `${brandName} | Transforming ${industryContext} one success story at a time ${toneData.emojis[0]}\n\n✅ Trusted by industry leaders\n✅ Proven track record\n✅ Innovative solutions\n\nDiscover what makes us different.`,
+        hashtags: ['#Success', `#${industryContext}`, '#Innovation', '#Growth'],
+        cta: 'Book your personalized demo today'
+      },
+      {
+        caption: `The future of ${industryContext} starts with ${brandName} ${toneData.emojis[1]}\n\nWe combine cutting-edge technology with deep industry expertise to deliver solutions that work.\n\nJoin the revolution.`,
+        hashtags: ['#FutureReady', '#Technology', `#${industryContext}`, '#Excellence'],
+        cta: 'Start your free trial'
+      }
+    ]
+  }));
+}
+
+// OPTIONS method for CORS
 export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
@@ -224,5 +221,5 @@ export async function OPTIONS(request: NextRequest) {
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
-  })
+  });
 }

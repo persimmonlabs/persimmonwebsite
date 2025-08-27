@@ -98,47 +98,44 @@ export const DemoGeneratorSection: React.FC = () => {
     setIsGenerating(true)
     setStep(3)
 
-    // Simulate API call (will be replaced with real API in Phase 1.2)
-    setTimeout(() => {
-      const industryContext = formData.industry === 'other' ? formData.otherIndustry || 'business' : formData.industry;
+    try {
+      // Call the API endpoint
+      const response = await fetch('/api/demo/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to generate content')
+      }
+
+      const data = await response.json()
       
-      const mockContent: GeneratedContent[] = formData.platforms.map(platform => ({
-        platform,
-        variants: [
-          {
-            caption: formData.tone === 'professional' 
-              ? `${formData.brandName} is revolutionizing the ${industryContext} industry with AI-powered content automation.\n\nOur solution delivers:\n• Consistent brand messaging across all channels\n• 20+ hours saved weekly on content creation\n• Data-driven insights for optimal engagement\n\nDiscover how leading brands are scaling their social presence with intelligent automation.`
-              : formData.tone === 'playful'
-              ? `Hey ${industryContext} friends! 👋 ${formData.brandName} here with some exciting news!\n\n🎉 We're making content creation FUN again! No more staring at blank screens or scrambling for ideas.\n\n✨ AI does the heavy lifting\n🚀 You get the glory\n💫 Your audience gets amazing content\n\nWho's ready to level up? 🙌`
-              : formData.tone === 'bold'
-              ? `${formData.brandName} is disrupting the ${industryContext} game. 💥\n\nWhile competitors struggle with content, we're already 10 steps ahead.\n\n🔥 AI-powered automation\n⚡ Lightning-fast execution\n🎯 Precision-targeted messaging\n\nStop following. Start leading.`
-              : `${formData.brandName} is here to transform your ${industryContext} content strategy! 🌟\n\nWe believe great content shouldn't be complicated. That's why we've built an AI system that understands your brand and creates authentic posts your audience will love.\n\n✅ Easy to use\n✅ Always on-brand\n✅ Saves you time\n\nLet's grow together!`,
-            hashtags: platform === 'linkedin' 
-              ? ['#B2B', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}`, '#Innovation']
-              : platform === 'twitter'
-              ? ['#AI', '#Automation']
-              : ['#ContentMarketing', '#AIAutomation', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}Tech`, '#SocialMedia', '#MarketingStrategy'],
-            cta: platform === 'linkedin' ? 'Connect with us to learn more →' : 'Start your free trial today →'
-          },
-          {
-            caption: formData.tone === 'friendly'
-              ? `Hi from ${formData.brandName}! 👋\n\nWe know how challenging it can be to keep up with social media in the ${industryContext} space. That's why we created something special just for you.\n\n🤝 Partner with AI\n📅 Never miss a post\n💬 Engage authentically\n\nYour success is our success!`
-              : `${formData.brandName} presents the future of ${industryContext} marketing.\n\nIntelligent. Automated. Effective.\n\n📊 Data-driven content\n🔄 Multi-platform distribution\n📈 Measurable ROI`,
-            hashtags: ['#Marketing', `#${industryContext}`, '#ContentStrategy', '#DigitalMarketing'],
-            cta: 'Book your personalized demo ✨'
-          },
-          {
-            caption: `${formData.brandName} | Transforming ${industryContext} content creation\n\n⏰ Save 20+ hours weekly\n📱 Manage all platforms from one place\n🎯 Reach the right audience every time\n\nJoin hundreds of ${industryContext} leaders already using AI to scale their content.`,
-            hashtags: ['#Productivity', '#AI', `#${industryContext}Marketing`, '#Automation'],
-            cta: 'Get started in 60 seconds →'
-          }
-        ]
+      // Transform API response to match our GeneratedContent interface
+      const generatedContent: GeneratedContent[] = data.content.map((item: any) => ({
+        platform: item.platform,
+        variants: item.variants
       }))
       
-      setGeneratedContent(mockContent)
+      setGeneratedContent(generatedContent)
       setIsGenerating(false)
       setStep(4)
-    }, 3000)
+      
+      // Show success message if available
+      if (data.message) {
+        console.log(data.message)
+      }
+      
+    } catch (error) {
+      console.error('Error generating content:', error)
+      setIsGenerating(false)
+      // You could set an error state here to show to the user
+      alert(error instanceof Error ? error.message : 'Failed to generate content. Please try again.')
+    }
   }
 
   const copyToClipboard = (text: string) => {
