@@ -97,7 +97,7 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
           "messages": [
             {
               "role": "system",
-              "content": "You are an elite social media strategist with 10+ years experience. Create a complete 7-day content calendar that demonstrates REAL automation power. Return ONLY valid JSON in this exact format: {\"contentPlan\": [{\"date\": \"MM/DD/YYYY\", \"time\": \"HH:MM AM/PM\", \"platform\": \"Instagram/LinkedIn/Twitter\", \"postType\": \"Educational/Behind-the-scenes/Product highlight/Industry insight/Customer story/How-to/Motivational\", \"content\": \"full post text with emojis and hashtags\", \"status\": \"Scheduled\", \"approval\": \"Pending\", \"engagement_prediction\": \"High/Medium/Low\", \"ai_optimization\": \"specific suggestion\"}]}. Generate 15-20 posts across 7 days. Each post must be industry-specific, engaging, and show clear AI intelligence."
+              "content": "You are an elite social media strategist with 10+ years experience creating viral content. Create a complete 7-day content calendar that demonstrates REAL automation power and visual intelligence. Return ONLY valid JSON in this exact format: {\"contentPlan\": [{\"date\": \"MM/DD/YYYY\", \"time\": \"HH:MM AM/PM\", \"platform\": \"Instagram/LinkedIn/Twitter\", \"postType\": \"Educational/Behind-the-scenes/Product highlight/Industry insight/Customer story/How-to/Motivational\", \"content\": \"full post text with emojis and hashtags\", \"visual_intent\": \"specific visual concept for this post\", \"hook_psychology\": \"psychological trigger used\", \"conversion_goal\": \"specific business outcome\", \"status\": \"Scheduled\", \"approval\": \"Pending\", \"engagement_prediction\": \"High/Medium/Low with reasoning\", \"ai_optimization\": \"specific suggestion\", \"algorithm_strategy\": \"how this works with platform algorithm\"}]}. Generate 15-20 posts across 7 days. Each post must be industry-specific, psychologically engaging, and designed to work with both AI visual generation and platform algorithms."
             },
             {
               "role": "user",
@@ -190,15 +190,15 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
           "messages": [
             {
               "role": "system", 
-              "content": "You are a creative director specializing in visual content for social media. Generate detailed visual descriptions and design recommendations for each post. Return JSON: {\"visual_recommendations\": [{\"post_index\": 0, \"visual_type\": \"Photo/Graphic/Video/Carousel\", \"description\": \"detailed visual description\", \"design_elements\": [\"element1\", \"element2\"], \"color_palette\": [\"#color1\", \"#color2\"], \"text_overlay\": \"suggested overlay text\", \"call_to_action_visual\": \"CTA button or element\"}]}"
+              "content": "You are an elite creative director with 15+ years experience creating viral social media content. You understand design psychology, platform algorithms, and conversion optimization. Return detailed visual strategies in JSON format: {\"visual_recommendations\": [{\"post_index\": 0, \"visual_type\": \"Photo/Graphic/Video/Carousel/Stories\", \"creative_concept\": \"detailed creative strategy\", \"layout_description\": \"specific layout with dimensions and placement\", \"color_strategy\": {\"primary\": \"#hex\", \"secondary\": \"#hex\", \"psychology\": \"why these colors work\"}, \"typography_direction\": {\"headline_font\": \"font style\", \"body_font\": \"font style\", \"hierarchy\": \"text size strategy\"}, \"visual_elements\": [\"specific design elements\"], \"brand_integration\": \"how to incorporate brand assets\", \"engagement_triggers\": [\"psychological hooks\"], \"platform_optimization\": \"platform-specific best practices\", \"conversion_elements\": \"CTA placement and design\", \"production_notes\": \"how this would be created professionally\", \"engagement_prediction\": \"High/Medium/Low with reasoning\", \"viral_potential\": \"specific viral mechanics\"}]}"
             },
             {
               "role": "user",
-              "content": "Create visual recommendations for {{$json.contentPlan.length}} social media posts for {{$json.brandName}} ({{$json.industry}} industry, {{$json.style}} style). Each visual should be professional, on-brand, and optimized for engagement."
+              "content": "Create advanced visual strategies for {{$json.contentPlan.length}} social media posts for {{$json.brandName}} in the {{$json.industry}} industry. Brand style: {{$json.style}}. Each visual must demonstrate elite creative direction that shows deep understanding of: 1) Platform algorithms and best practices, 2) Design psychology and engagement triggers, 3) Brand positioning and visual hierarchy, 4) Conversion optimization, 5) Production feasibility. Make each recommendation so detailed that it could be handed to a designer and produced immediately at agency quality."
             }
           ],
-          "temperature": 0.7,
-          "max_tokens": 2000,
+          "temperature": 0.8,
+          "max_tokens": 4000,
           "response_format": { "type": "json_object" }
         }
       }
@@ -218,10 +218,27 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
             const visual = visualData.visual_recommendations.find(v => v.post_index === index) || 
                           visualData.visual_recommendations[index % visualData.visual_recommendations.length];
             
+            // Calculate AI intelligence score based on complexity
+            const aiIntelligenceScore = Math.min(100, 
+              (post.hook_psychology ? 15 : 0) +
+              (post.algorithm_strategy ? 20 : 0) +
+              (visual.engagement_triggers?.length * 10 || 0) +
+              (visual.viral_potential ? 25 : 0) +
+              (brandAnalysis.voice_analysis.automation_potential === 'High' ? 20 : 10)
+            );
+            
             return {
               ...post,
-              visual_recommendation: visual,
-              brand_voice: brandAnalysis.voice_analysis
+              visual_strategy: {
+                ...visual,
+                brand_alignment: `Perfectly aligned with ${brandAnalysis.voice_analysis.personality?.join(', ')} brand personality`,
+                production_ready: true,
+                agency_quality: 'Elite creative direction - ready for immediate production'
+              },
+              brand_intelligence: brandAnalysis.voice_analysis,
+              ai_confidence: aiIntelligenceScore,
+              automation_readiness: aiIntelligenceScore >= 85 ? 'Fully Automated' : 'AI + Human Review',
+              strategic_value: `${post.conversion_goal} via ${post.hook_psychology} psychology`
             };
           });
           
@@ -270,17 +287,41 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
             </div>
             
             <div style="background: white; padding: 30px; border: 1px solid #ddd;">
-              <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F5793B;">
-                <h3 style="color: #F5793B; margin-top: 0;">🧠 What Our AI Just Did For You:</h3>
-                <ul style="margin: 10px 0; padding-left: 20px;">
-                  <li><strong>AI Strategy Analysis:</strong> Analyzed your {{$json.industry}} market position</li>
-                  <li><strong>AI Content Generation:</strong> Created {{$json.contentPlan.length}} unique posts with industry expertise</li>
-                  <li><strong>AI Brand Voice:</strong> Defined your {{$json.brand_analysis.personality.join(", ")}} personality</li>
-                  <li><strong>AI Visual Direction:</strong> Generated visual concepts for every post</li>
-                  <li><strong>AI Optimization:</strong> Predicted engagement and suggested improvements</li>
-                </ul>
-                <p style="font-weight: bold; color: #2d5016; margin: 15px 0 5px 0;">
-                  🎯 Automation Score: {{$json.automation_score}}/100 - Your brand is PERFECT for AI automation!
+              <div style="background: #f0f8ff; padding: 25px; border-radius: 12px; margin: 20px 0; border-left: 6px solid #F5793B;">
+                <h3 style="color: #F5793B; margin-top: 0; font-size: 20px;">🧠 Elite AI Creative Director Just Analyzed Your Brand</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                  <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <strong style="color: #F5793B;">🎯 Strategic Analysis</strong><br>
+                    <small>Market position, competitive advantages, audience psychology</small>
+                  </div>
+                  <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <strong style="color: #F5793B;">📝 Content Intelligence</strong><br>
+                    <small>{{$json.contentPlan.length}} posts with conversion psychology built in</small>
+                  </div>
+                  <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <strong style="color: #F5793B;">🎨 Visual Strategy</strong><br>
+                    <small>Elite creative direction for every single post</small>
+                  </div>
+                  <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <strong style="color: #F5793B;">📊 Algorithm Optimization</strong><br>
+                    <small>Platform-specific engagement triggers and viral mechanics</small>
+                  </div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #e8f5e8, #d4edda); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                  <h4 style="color: #2d5016; margin-top: 0;">🚀 What Makes This So Impressive:</h4>
+                  <ul style="color: #2d5016; margin: 10px 0; padding-left: 20px;">
+                    <li><strong>Design Psychology:</strong> Each visual uses specific psychological triggers</li>
+                    <li><strong>Platform Intelligence:</strong> Optimized for Instagram, LinkedIn, Twitter algorithms</li>
+                    <li><strong>Brand Consistency:</strong> {{$json.brand_analysis.personality.join(", ")}} personality maintained throughout</li>
+                    <li><strong>Production Ready:</strong> Detailed enough for immediate professional creation</li>
+                    <li><strong>Conversion Focused:</strong> Every post has a specific business outcome</li>
+                  </ul>
+                </div>
+                
+                <p style="font-weight: bold; color: #2d5016; margin: 15px 0 5px 0; font-size: 16px; text-align: center;">
+                  🎯 AI Confidence Score: {{$json.automation_score}}/100 - Elite automation potential detected!
                 </p>
               </div>
               
@@ -317,11 +358,22 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
                 </p>
               </div>
               
-              <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid #ffeaa7;">
-                <h4 style="color: #856404; margin-top: 0;">⚡ This Demo Shows REAL AI Power</h4>
-                <p style="color: #856404; margin: 5px 0;">
-                  Unlike other "AI tools" that just rephrase templates, this demo used actual AI to understand your {{$json.industry}} market, 
-                  analyze your brand, and create strategic content that converts. This is the same AI system we'd deploy for your business.
+              <div style="background: #fff3cd; padding: 25px; border-radius: 12px; margin: 25px 0; border: 2px solid #ffeaa7;">
+                <h4 style="color: #856404; margin-top: 0; font-size: 18px;">⚡ Elite Visual Intelligence In Action</h4>
+                <p style="color: #856404; margin: 10px 0;">
+                  This isn't template-based "AI" - our system demonstrates the same creative intelligence as a $200/hour creative director:
+                </p>
+                <div style="background: rgba(255,255,255,0.7); padding: 15px; border-radius: 8px; margin: 15px 0;">
+                  <strong style="color: #856404;">Visual Psychology Examples:</strong><br>
+                  ✓ Color psychology aligned with your {{$json.industry}} industry<br>
+                  ✓ Typography hierarchy for maximum readability and conversion<br>
+                  ✓ Layout patterns that trigger specific emotional responses<br>
+                  ✓ Platform algorithm optimization (Instagram carousel vs LinkedIn single image)<br>
+                  ✓ Engagement triggers based on your target audience psychology
+                </div>
+                <p style="color: #856404; margin: 10px 0; font-weight: bold;">
+                  Each visual strategy is so detailed, it could be handed to a designer and produced immediately at agency quality. 
+                  This is the actual AI creative intelligence your business would get.
                 </p>
               </div>
               
