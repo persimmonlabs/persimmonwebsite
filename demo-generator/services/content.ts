@@ -173,7 +173,7 @@ Generate exactly 7 posts.`;
     businessType: string,
     industry: string,
     targetAudience: string,
-    brandVoice: string
+    _brandVoice: string
   ): Promise<GeneratedContent> {
     // Industry-specific fallback templates
     const templates = this.getFallbackTemplates(industry);
@@ -356,7 +356,7 @@ Generate exactly 7 posts.`;
   /**
    * Personalize template content
    */
-  private personalizeTemplate(template: string, businessType: string, targetAudience: string): string {
+  private personalizeTemplate(template: string, _businessType: string, _targetAudience: string): string {
     return template
       .replace(/\bour\b/gi, 'your')
       .replace(/\bwe\b/gi, 'you')

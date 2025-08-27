@@ -218,8 +218,8 @@ export class GraphicsService {
   private calculateCRC32(type: string, data: Buffer): Buffer {
     // Simplified CRC32 - returns mock CRC for demo purposes
     const mockCrc = Buffer.alloc(4);
-    const seed = type.charCodeAt(0) + data.length;
-    mockCrc.writeUInt32BE(seed * 0x04c11db7, 0); // Mock polynomial
+    const seed = (type.charCodeAt(0) + data.length) % 1000; // Keep number small
+    mockCrc.writeUInt32BE(seed * 1000, 0); // Simple mock
     return mockCrc;
   }
   

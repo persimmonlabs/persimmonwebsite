@@ -7,7 +7,7 @@
     "dev": "ts-node-dev --respawn --transpile-only index.ts",
     "dev:test": "cp .env.test .env && ts-node-dev --respawn --transpile-only index.ts",
     "test:offline": "cp .env.test .env && npm run dev",
-    "build": "tsc",
+    "build": "tsc && cp -r templates dist/templates 2>/dev/null || (robocopy templates dist\\templates /e >nul 2>&1 || true)",
     "start": "node dist/index.js",
     "test": "jest",
     "typecheck": "tsc --noEmit"
