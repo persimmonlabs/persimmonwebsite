@@ -171,8 +171,6 @@
         "name": "Route by Type"
       },
   
-      /* ---------- SHARED: Drive listings ---------- */
-  
       {
         "parameters": {
           "resource": "fileFolder",
@@ -274,8 +272,6 @@
         }
       },
   
-      /* ---------- PREMATCH & MATCHDAY: Photo selection weighted ---------- */
-  
       {
         "parameters": {
           "jsCode": "// Weighted action-shot selection (least-used players first)\\n// Uses Posts_Log counts for T-1day + T-1hour\\nconst driveFiles = $items(\\\"List Action Shots\\\",0,0).map(i=>i.json);\\nconst logs = $items(\\\"Read Posts_Log\\\",0,0).map(i=>i.json);\\n\\nfunction extractPlayer(filename){\\n  const base = filename.replace(/\\.[^.]+$/, '');\\n  // common separators\\n  return base.replace(/[_-]+/g, ' ').trim();\\n}\\n\\n// Count appearances by player in pre/matchday\\nconst counts = new Map();\\nfor(const r of logs){\\n  const t = (r.post_type||'').toLowerCase();\\n  if(t==='t-1day' || t==='t-1hour'){\\n    const name = (r.player_name||'').trim();\\n    if(!name) continue;\\n    counts.set(name, (counts.get(name)||0)+1);\\n  }\\n}\\n\\n// Bucket files by player\\nconst byPlayer = new Map();\\nfor(const f of driveFiles){\\n  const p = extractPlayer(f.name);\\n  if(!byPlayer.has(p)) byPlayer.set(p, []);\\n  byPlayer.get(p).push(f);\\n}\\n\\n// Find min count players\\nlet min = Infinity;\\nfor(const p of byPlayer.keys()){\\n  const c = counts.get(p)||0;\\n  if(c<min) min=c;\\n}\\nconst candidatesPlayers = [...byPlayer.keys()].filter(p => (counts.get(p)||0)===min);\\nconst pickedPlayer = candidatesPlayers[Math.floor(Math.random()*candidatesPlayers.length)];\\nconst files = byPlayer.get(pickedPlayer)||driveFiles;\\nconst pickedFile = files[Math.floor(Math.random()*files.length)];\\n\\nreturn [{ json: { selectedPhoto: { id: pickedFile.id, name: pickedFile.name }, player_name: pickedPlayer, payload: $json.payload, type: $json.type } }];"
@@ -286,8 +282,6 @@
         "id": "pick-photo-weighted",
         "name": "Select Weighted Action Shot"
       },
-  
-      /* ---------- PREMATCH: Deck, tokens, slides ---------- */
   
       {
         "parameters": {
@@ -451,8 +445,6 @@
         }
       },
   
-      /* ---------- MATCHDAY: similar to prematch, uses different deck folder ---------- */
-  
       {
         "parameters": {
           "jsCode": "const decks = $items(\"List Match-Day Decks\",0,0).map(i=>i.json);\\nconst deck = decks[Math.floor(Math.random()*Math.max(1,decks.length))];\\nconst p = $json.payload||{};\\nconst player = $json.player_name||'';\\nconst tokens = {\\n  DATE: p.dateISO||'',\\n  TIME: p.time_local||'',\\n  TEAM: p.team||'',\\n  OPPONENT: p.opponent||'',\\n  SITE: p.site||'',\\n  VENUE: p.venue||'',\\n  CONFERENCE: p.conference||'',\\n  PLAYER: player,\\n  HEADLINE: `MATCH DAY: ${p.team} vs ${p.opponent}`\\n};\\nreturn [{json:{ deckId: deck.id, tokens, selectedPhoto: $json.selectedPhoto, slideIndex: 0, payload: p, player_name: player }}];"
@@ -531,6 +523,7 @@
       },
       {
         "parameters": {
+          "authentication": "none",
           "requestMethod": "GET",
           "url": "={{ $json.contentUrl }}",
           "options": {
@@ -599,8 +592,6 @@
         }
       },
   
-      /* ---------- SCORE / HIGHLIGHT: Manager first, then RSS ---------- */
-  
       {
         "parameters": {
           "jsCode": "// Lookup Manager Inputs for this match\\nconst mid = ($json.payload||{}).match_id;\\nconst rows = $items(\\\"Read Manager_Inputs\\\",0,0).map(i=>i.json);\\nconst found = rows.find(r => (r.match_id||r.Match_ID||'').toString() === String(mid));\\nreturn [{ json: { manager: found||null, payload: $json.payload, type: $json.type } }];"
@@ -634,7 +625,6 @@
         "name": "Has Manager Data?"
       },
   
-      /* RSS fetch for fallback */
       {
         "parameters": {
           "url": "={{ $json.payload.team && $json.payload.team.toLowerCase().includes('women') ? 'https://athletics.rose-hulman.edu/rss?path=wtens' : 'https://athletics.rose-hulman.edu/rss?path=mtens' }}",
@@ -660,6 +650,7 @@
       },
       {
         "parameters": {
+          "authentication": "none",
           "requestMethod": "GET",
           "url": "={{ $json.articleUrl || ($items(\"Lookup Manager Input\",0,0)[0].json.manager && $items(\"Lookup Manager Input\",0,0)[0].json.manager.article_url) || '' }}",
           "options": {
@@ -683,7 +674,6 @@
         "name": "Extract Score & Highlight"
       },
   
-      /* Select photo for SCORE/HIGHLIGHT (prefer matching player) */
       {
         "parameters": {
           "jsCode": "const driveFiles = $items(\"List Action Shots\",0,0).map(i=>i.json);\\nconst logs = $items(\"Read Posts_Log\",0,0).map(i=>i.json);\\nconst p = $json.highlight_player || '';\\nfunction extractPlayer(filename){ return filename.replace(/\\.[^.]+$/, '').replace(/[_-]+/g,' ').trim(); }\\nfunction pick(files){ return files[Math.floor(Math.random()*Math.max(1,files.length))]; }\\nlet candidates = driveFiles.filter(f=> extractPlayer(f.name).toLowerCase() === p.toLowerCase());\\nif(candidates.length===0) candidates = driveFiles;\\nconst file = pick(candidates);\\nreturn [{ json: { selectedPhoto: { id: file.id, name: file.name }, player_name: p||extractPlayer(file.name), payload: $items(\"Extract Score & Highlight\",0,0)[0].json.payload, score_text: $items(\"Extract Score & Highlight\",0,0)[0].json.score_text, highlight_text: $items(\"Extract Score & Highlight\",0,0)[0].json.highlight_text } }];"
@@ -694,8 +684,6 @@
         "id": "pick-photo-for-result",
         "name": "Pick Photo (Score/Highlight)"
       },
-  
-      /* ---------- SCORE: deck + slides ---------- */
   
       {
         "parameters": {
@@ -775,6 +763,7 @@
       },
       {
         "parameters": {
+          "authentication": "none",
           "requestMethod": "GET",
           "url": "={{ $json.contentUrl }}",
           "options": { "response": { "responseFormat": "file", "binaryPropertyName": "data" } }
@@ -841,7 +830,6 @@
         }
       },
   
-      /* ---------- HIGHLIGHT: deck + slides ---------- */
       {
         "parameters": {
           "jsCode": "const decks = $items(\"List Highlight Decks\",0,0).map(i=>i.json);\\nconst deck = decks[Math.floor(Math.random()*Math.max(1,decks.length))];\\nconst j = $items(\"Pick Photo (Score/Highlight)\",0,0)[0].json;\\nconst p = j.payload||{};\\nconst tokens = {\\n  DATE: p.dateISO||'',\\n  TEAM: p.team||'',\\n  PLAYER: j.player_name||'',\\n  OPPONENT: p.opponent||'',\\n  HIGHLIGHT: j.highlight_text||'',\\n  HEADLINE: `HIGHLIGHT: ${j.player_name||''}`\\n};\\nreturn [{ json: { deckId: deck.id, tokens, selectedPhoto: j.selectedPhoto, payload: p, player_name: j.player_name } }];"
@@ -920,6 +908,7 @@
       },
       {
         "parameters": {
+          "authentication": "none",
           "requestMethod": "GET",
           "url": "={{ $json.contentUrl }}",
           "options": { "response": { "responseFormat": "file", "binaryPropertyName": "data" } }
@@ -992,8 +981,6 @@
       "Read Posts_Log": { "main": [[{ "node": "Orchestrate", "type": "main", "index": 0 }]] },
       "Read Manager_Inputs": { "main": [[{ "node": "Orchestrate", "type": "main", "index": 0 }]] },
       "Orchestrate": { "main": [[{ "node": "Route by Type", "type": "main", "index": 0 }]] },
-  
-      /* Shared listings wired from both PREMATCH/MATCHDAY/SCORE/HIGHLIGHT branches */
       "Route by Type": {
         "main": [
           [{ "node": "List Action Shots", "type": "main", "index": 0 }, { "node": "List Gameday Decks (Pre-Match)", "type": "main", "index": 0 }],
@@ -1002,8 +989,6 @@
           [{ "node": "Lookup Manager Input", "type": "main", "index": 0 }, { "node": "List Action Shots", "type": "main", "index": 0 }, { "node": "List Highlight Decks", "type": "main", "index": 0 }]
         ]
       },
-  
-      /* PREMATCH chain */
       "List Action Shots": {
         "main": [
           [{ "node": "Select Weighted Action Shot", "type": "main", "index": 0 }],
@@ -1027,7 +1012,6 @@
       "Download PNG (Pre-Match)": { "main": [[{ "node": "Upload to Outbox (Pre-Match)", "type": "main", "index": 0 }]] },
       "Upload to Outbox (Pre-Match)": { "main": [[{ "node": "Append Posts_Log (Pre-Match)", "type": "main", "index": 0 }]] },
   
-      /* MATCHDAY chain */
       "List Match-Day Decks": { "main": [[{ "node": "Match-Day: Build Tokens", "type": "main", "index": 0 }]] },
       "Match-Day: Build Tokens": { "main": [[{ "node": "Slides: Get Presentation (Match-Day)", "type": "main", "index": 0 }]] },
       "Slides: Get Presentation (Match-Day)": { "main": [[{ "node": "Match-Day: Pick Slide", "type": "main", "index": 0 }]] },
@@ -1037,7 +1021,6 @@
       "Download PNG (Match-Day)": { "main": [[{ "node": "Upload to Outbox (Match-Day)", "type": "main", "index": 0 }]] },
       "Upload to Outbox (Match-Day)": { "main": [[{ "node": "Append Posts_Log (Match-Day)", "type": "main", "index": 0 }]] },
   
-      /* SCORE/HIGHLIGHT: manager vs rss fallback */
       "Lookup Manager Input": {
         "main": [
           [{ "node": "Has Manager Data?", "type": "main", "index": 0 }],
@@ -1059,7 +1042,6 @@
       "Fetch Athletics Article": { "main": [[{ "node": "Extract Score & Highlight", "type": "main", "index": 0 }]] },
       "Extract Score & Highlight": { "main": [[{ "node": "Pick Photo (Score/Highlight)", "type": "main", "index": 0 }]] },
   
-      /* SCORE chain continue */
       "Pick Photo (Score/Highlight)": {
         "main": [
           [{ "node": "Score: Build Tokens", "type": "main", "index": 0 }],
@@ -1074,7 +1056,6 @@
       "Download PNG (Score)": { "main": [[{ "node": "Upload to Outbox (Score)", "type": "main", "index": 0 }]] },
       "Upload to Outbox (Score)": { "main": [[{ "node": "Append Posts_Log (Score)", "type": "main", "index": 0 }]] },
   
-      /* HIGHLIGHT chain continue */
       "Highlight: Build Tokens": { "main": [[{ "node": "Slides: Get Presentation (Highlight)", "type": "main", "index": 0 }]] },
       "Slides: Get Presentation (Highlight)": { "main": [[{ "node": "Highlight: Pick Slide", "type": "main", "index": 0 }]] },
       "Highlight: Pick Slide": { "main": [[{ "node": "Slides: Replace Tokens + Photo (Highlight)", "type": "main", "index": 0 }]] },

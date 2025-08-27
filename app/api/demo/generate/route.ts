@@ -139,7 +139,9 @@ export async function POST(request: NextRequest) {
     
     // Create demo record in database (if Prisma is configured)
     let demoRecord = null;
-    if (process.env.DATABASE_URL && prisma) {
+    const isDatabaseEnabled = process.env.DATABASE_URL && process.env.DATABASE_URL !== '';
+    
+    if (isDatabaseEnabled && prisma) {
       try {
         demoRecord = await prisma.demo.create({
           data: {
