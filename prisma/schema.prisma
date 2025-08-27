@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Demo {
+  id          String       @id @default(uuid())
+  email       String
+  brandName   String       @map("brand_name")
+  industry    String
+  tone        String
+  platforms   String[]
+  website     String?
+  publicToken String       @unique @map("public_token")
+  status      DemoStatus   @default(PROCESSING)
+  metadata    Json?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  completedAt DateTime?    @map("completed_at")
+  
+  results     DemoResult[]
+  webhooks    WebhookLog[]
+  
+  @@index([email])
+  @@index([publicToken])
+  @@map("demos")
+}
+
+model DemoResult {
+  id           String    @id @default(uuid())
+  demoId       String    @map("demo_id")
+  platform     String
+  variantIndex Int       @default(0) @map("variant_index")
+  caption      String    @db.Text
+  hashtags     String[]
+  cta          String?
+  previewUrl   String?   @map("preview_url")
+  metrics      Json?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  
+  demo         Demo      @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  
+  @@index([demoId])
+  @@map("demo_results")
+}
+
+model WebhookLog {
+  id           String         @id @default(uuid())
+  demoId       String         @map("demo_id")
+  webhookType  WebhookType    @map("webhook_type")
+  status       WebhookStatus  @default(PENDING)
+  url          String?
+  payload      Json
+  response     Json?
+  attempts     Int            @default(0)
+  lastAttempt  DateTime?      @map("last_attempt")
+  createdAt    DateTime       @default(now()) @map("created_at")
+  completedAt  DateTime?      @map("completed_at")
+  
+  demo         Demo           @relation(fields: [demoId], references: [id], onDelete: Cascade)
+  
+  @@index([demoId])
+  @@index([status])
+  @@map("webhook_logs")
+}
+
+model EmailQueue {
+  id           String        @id @default(uuid())
+  to           String
+  subject      String
+  template     String
+  data         Json
+  status       EmailStatus   @default(PENDING)
+  attempts     Int           @default(0)
+  lastAttempt  DateTime?     @map("last_attempt")
+  sentAt       DateTime?     @map("sent_at")
+  error        String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  
+  @@index([status])
+  @@index([to])
+  @@map("email_queue")
+}
+
+enum DemoStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum WebhookType {
+  N8N
+  ZAPIER
+  CUSTOM
+}
+
+enum WebhookStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  RETRYING
+}
+
+enum EmailStatus {
+  PENDING
+  SENT
+  FAILED
+  BOUNCED
+}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { generateBrandBrief, generateContentVariants } from '@/lib/ai/content-generator';
 import { v4 as uuidv4 } from 'uuid';
+import prisma from '@/lib/db/prisma';
 
 // Validation schema
 const DemoRequestSchema = z.object({
@@ -45,6 +46,64 @@ function checkRateLimit(identifier: string): boolean {
   return true;
 }
 
+// Trigger n8n webhook
+async function triggerN8nWebhook(demoId: string, data: any) {
+  if (!process.env.N8N_WEBHOOK_URL) return;
+  
+  try {
+    const response = await fetch(process.env.N8N_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        demoId,
+        ...data,
+        timestamp: new Date().toISOString()
+      }),
+    });
+    
+    const result = await response.json();
+    
+    // Log webhook attempt
+    if (prisma) {
+      await prisma.webhookLog.create({
+        data: {
+          demoId,
+          webhookType: 'N8N',
+          status: response.ok ? 'SUCCESS' : 'FAILED',
+          url: process.env.N8N_WEBHOOK_URL,
+          payload: data,
+          response: result,
+          attempts: 1,
+          lastAttempt: new Date(),
+          completedAt: response.ok ? new Date() : null
+        }
+      }).catch(console.error);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('n8n webhook error:', error);
+    
+    // Log failed webhook
+    if (prisma) {
+      await prisma.webhookLog.create({
+        data: {
+          demoId,
+          webhookType: 'N8N',
+          status: 'FAILED',
+          url: process.env.N8N_WEBHOOK_URL,
+          payload: data,
+          response: { error: error instanceof Error ? error.message : 'Unknown error' },
+          attempts: 1,
+          lastAttempt: new Date()
+        }
+      }).catch(console.error);
+    }
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Parse and validate request body
@@ -78,13 +137,84 @@ export async function POST(request: NextRequest) {
     
     console.log(`Generating demo ${demoId} for ${validatedData.brandName}`);
     
+    // Create demo record in database (if Prisma is configured)
+    let demoRecord = null;
+    if (process.env.DATABASE_URL && prisma) {
+      try {
+        demoRecord = await prisma.demo.create({
+          data: {
+            id: demoId,
+            email: validatedData.email,
+            brandName: validatedData.brandName,
+            industry: industryContext,
+            tone: validatedData.tone,
+            platforms: validatedData.platforms,
+            website: validatedData.website || null,
+            publicToken: publicToken,
+            status: 'PROCESSING',
+            metadata: {
+              otherIndustry: validatedData.otherIndustry,
+              userAgent: request.headers.get('user-agent'),
+              ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip')
+            }
+          }
+        });
+      } catch (dbError) {
+        console.error('Database error creating demo:', dbError);
+        // Continue without database
+      }
+    }
+    
     // Check if OpenAI is configured
     if (!process.env.OPENAI_API_KEY) {
       console.log('OpenAI not configured, returning enhanced mock data');
+      const mockContent = generateMockContent(validatedData);
+      
+      // Save mock results to database
+      if (demoRecord && prisma) {
+        try {
+          for (const platformContent of mockContent) {
+            for (let i = 0; i < platformContent.variants.length; i++) {
+              const variant = platformContent.variants[i];
+              await prisma.demoResult.create({
+                data: {
+                  demoId: demoId,
+                  platform: platformContent.platform,
+                  variantIndex: i,
+                  caption: variant.caption,
+                  hashtags: variant.hashtags,
+                  cta: variant.cta
+                }
+              });
+            }
+          }
+          
+          await prisma.demo.update({
+            where: { id: demoId },
+            data: {
+              status: 'COMPLETED',
+              completedAt: new Date()
+            }
+          });
+        } catch (dbError) {
+          console.error('Database error saving results:', dbError);
+        }
+      }
+      
+      // Trigger n8n webhook
+      await triggerN8nWebhook(demoId, {
+        email: validatedData.email,
+        brandName: validatedData.brandName,
+        industry: industryContext,
+        tone: validatedData.tone,
+        platforms: validatedData.platforms,
+        publicToken
+      });
+      
       return NextResponse.json({
         demoId,
-        content: generateMockContent(validatedData),
-        shareableLink: '#',
+        content: mockContent,
+        shareableLink: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/demo/${publicToken}`,
         message: 'Demo mode - using mock content (OpenAI not configured)'
       });
     }
@@ -122,6 +252,76 @@ export async function POST(request: NextRequest) {
     const content = await Promise.all(contentPromises);
     
     console.log(`Generated content for ${content.length} platforms`);
+    
+    // Save results to database
+    if (demoRecord && prisma) {
+      try {
+        for (const platformContent of content) {
+          for (let i = 0; i < platformContent.variants.length; i++) {
+            const variant = platformContent.variants[i];
+            await prisma.demoResult.create({
+              data: {
+                demoId: demoId,
+                platform: platformContent.platform,
+                variantIndex: i,
+                caption: variant.caption,
+                hashtags: variant.hashtags,
+                cta: variant.cta
+              }
+            });
+          }
+        }
+        
+        // Update demo status
+        await prisma.demo.update({
+          where: { id: demoId },
+          data: {
+            status: 'COMPLETED',
+            completedAt: new Date(),
+            metadata: {
+              ...demoRecord.metadata as object,
+              brandBrief
+            }
+          }
+        });
+      } catch (dbError) {
+        console.error('Database error saving results:', dbError);
+      }
+    }
+    
+    // Queue email delivery
+    if (prisma) {
+      try {
+        await prisma.emailQueue.create({
+          data: {
+            to: validatedData.email,
+            subject: `Your AI-Generated Content for ${validatedData.brandName} is Ready!`,
+            template: 'demo-results',
+            data: {
+              demoId,
+              brandName: validatedData.brandName,
+              publicToken,
+              platforms: validatedData.platforms,
+              content
+            }
+          }
+        });
+      } catch (dbError) {
+        console.error('Database error queuing email:', dbError);
+      }
+    }
+    
+    // Trigger n8n webhook for AI-generated content
+    await triggerN8nWebhook(demoId, {
+      email: validatedData.email,
+      brandName: validatedData.brandName,
+      industry: industryContext,
+      tone: validatedData.tone,
+      platforms: validatedData.platforms,
+      publicToken,
+      brandBrief,
+      content
+    });
     
     // Return results
     const shareableLink = `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/demo/${publicToken}`;
