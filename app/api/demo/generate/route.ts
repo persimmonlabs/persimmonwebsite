@@ -178,7 +178,7 @@ function generateMockContent(data: any) {
     }
   };
   
-  const toneData = toneVariations[tone] || toneVariations.friendly;
+  const toneData = toneVariations[tone as keyof typeof toneVariations] || toneVariations.friendly;
   
   return platforms.map((platform: string) => ({
     platform,

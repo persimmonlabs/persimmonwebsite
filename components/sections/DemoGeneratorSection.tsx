@@ -24,6 +24,10 @@ import {
   Calendar
 } from 'lucide-react'
 import { Button } from '../Button'
+import { InstagramPreview } from '../previews/InstagramPreview'
+import { LinkedInPreview } from '../previews/LinkedInPreview'
+import { TwitterPreview } from '../previews/TwitterPreview'
+import { FacebookPreview } from '../previews/FacebookPreview'
 
 type Platform = 'instagram' | 'linkedin' | 'twitter' | 'facebook'
 type Tone = 'professional' | 'friendly' | 'playful' | 'bold'
@@ -556,44 +560,96 @@ export const DemoGeneratorSection: React.FC = () => {
                     </div>
 
                     {/* Content Preview */}
-                    <div className="bg-gray-50 rounded-lg p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex items-center space-x-2">
-                          {selectedPlatform === 'instagram' && <Instagram className="w-5 h-5 text-pink-600" />}
-                          {selectedPlatform === 'linkedin' && <Linkedin className="w-5 h-5 text-blue-700" />}
-                          {selectedPlatform === 'twitter' && <Twitter className="w-5 h-5 text-sky-500" />}
-                          {selectedPlatform === 'facebook' && <Facebook className="w-5 h-5 text-blue-600" />}
-                          <span className="font-medium">{formData.brandName || 'Your Brand'}</span>
-                        </div>
-                        <button
-                          onClick={() => copyToClipboard(content.variants[selectedVariant].caption)}
-                          className="p-2 hover:bg-white rounded-lg transition-colors"
-                        >
-                          <Copy className="w-4 h-4 text-gray-600" />
-                        </button>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      {/* Visual Preview */}
+                      <div className="flex-1 flex justify-center items-start bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg p-6">
+                        {selectedPlatform === 'instagram' && (
+                          <InstagramPreview 
+                            content={{
+                              brandName: formData.brandName || 'Your Brand',
+                              caption: content.variants[selectedVariant].caption,
+                              hashtags: content.variants[selectedVariant].hashtags,
+                              imageUrl: undefined
+                            }}
+                          />
+                        )}
+                        {selectedPlatform === 'linkedin' && (
+                          <LinkedInPreview 
+                            content={{
+                              brandName: formData.brandName || 'Your Brand',
+                              caption: content.variants[selectedVariant].caption,
+                              hashtags: content.variants[selectedVariant].hashtags,
+                              imageUrl: undefined
+                            }}
+                          />
+                        )}
+                        {selectedPlatform === 'twitter' && (
+                          <TwitterPreview 
+                            content={{
+                              brandName: formData.brandName || 'Your Brand',
+                              caption: content.variants[selectedVariant].caption,
+                              hashtags: content.variants[selectedVariant].hashtags,
+                              imageUrl: undefined
+                            }}
+                          />
+                        )}
+                        {selectedPlatform === 'facebook' && (
+                          <FacebookPreview 
+                            content={{
+                              brandName: formData.brandName || 'Your Brand',
+                              caption: content.variants[selectedVariant].caption,
+                              hashtags: content.variants[selectedVariant].hashtags,
+                              imageUrl: undefined
+                            }}
+                          />
+                        )}
                       </div>
                       
-                      <p className="text-gray-800 whitespace-pre-wrap mb-4">
-                        {content.variants[selectedVariant].caption}
-                      </p>
-                      
-                      {content.variants[selectedVariant].hashtags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {content.variants[selectedVariant].hashtags.map((tag, i) => (
-                            <span key={i} className="text-blue-600 text-sm">
-                              {tag}
-                            </span>
-                          ))}
+                      {/* Text Content for Copying */}
+                      <div className="lg:w-80">
+                        <div className="bg-gray-800 rounded-lg p-4">
+                          <div className="flex justify-between items-center mb-3">
+                            <h4 className="text-sm font-semibold text-gray-300">Copy Content</h4>
+                            <button
+                              onClick={() => {
+                                const fullContent = content.variants[selectedVariant].cta 
+                                  ? `${content.variants[selectedVariant].caption}\n\n${content.variants[selectedVariant].cta}\n\n${content.variants[selectedVariant].hashtags.join(' ')}`
+                                  : `${content.variants[selectedVariant].caption}\n\n${content.variants[selectedVariant].hashtags.join(' ')}`;
+                                copyToClipboard(fullContent);
+                              }}
+                              className="p-2 hover:bg-gray-700 rounded transition-colors group"
+                            >
+                              <Copy className="w-4 h-4 text-gray-400 group-hover:text-white" />
+                            </button>
+                          </div>
+                          <div className="space-y-3">
+                            <div>
+                              <p className="text-xs text-gray-500 mb-1">Caption</p>
+                              <p className="text-sm text-gray-200 whitespace-pre-wrap">
+                                {content.variants[selectedVariant].caption}
+                              </p>
+                            </div>
+                            {content.variants[selectedVariant].cta && (
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">Call to Action</p>
+                                <p className="text-sm text-persimmon-coral">
+                                  {content.variants[selectedVariant].cta}
+                                </p>
+                              </div>
+                            )}
+                            {content.variants[selectedVariant].hashtags.length > 0 && (
+                              <div>
+                                <p className="text-xs text-gray-500 mb-1">Hashtags</p>
+                                <p className="text-sm text-blue-400">
+                                  {content.variants[selectedVariant].hashtags.map(tag => 
+                                    tag.startsWith('#') ? tag : `#${tag}`
+                                  ).join(' ')}
+                                </p>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      )}
-                      
-                      {content.variants[selectedVariant].cta && (
-                        <div className="bg-gradient-to-r from-persimmon-peach/20 to-persimmon-coral/20 rounded-lg p-3 inline-block">
-                          <span className="text-sm font-medium text-gray-800">
-                            {content.variants[selectedVariant].cta}
-                          </span>
-                        </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 ))}
