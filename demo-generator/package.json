@@ -5,6 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only index.ts",
+    "dev:test": "cp .env.test .env && ts-node-dev --respawn --transpile-only index.ts",
+    "test:offline": "cp .env.test .env && npm run dev",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",

@@ -31,6 +31,14 @@ export class EmailService {
    * Send demo delivery email
    */
   async sendDemoEmail(data: DemoEmailData): Promise<EmailResult> {
+    // Check if email is disabled for testing
+    if (process.env.DISABLE_EMAIL === 'true') {
+      return {
+        success: true,
+        messageId: 'mock-' + Date.now(),
+      };
+    }
+    
     if (!this.initialized) {
       return {
         success: false,
