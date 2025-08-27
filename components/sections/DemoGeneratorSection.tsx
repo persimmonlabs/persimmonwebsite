@@ -26,9 +26,23 @@ import {
 import { Button } from '../Button'
 
 type Platform = 'instagram' | 'linkedin' | 'twitter' | 'facebook'
-type ContentGoal = 'awareness' | 'lead_gen' | 'launch' | 'promo'
-type VoiceTone = 'professional' | 'friendly' | 'playful' | 'bold'
-type PostType = 'photo_caption' | 'carousel' | 'long_post' | 'infographic' | 'auto'
+type Tone = 'professional' | 'friendly' | 'playful' | 'bold'
+type Industry = 'ecommerce' | 'saas' | 'agency' | 'fitness' | 'restaurant' | 'services' | 'realestate' | 'healthcare' | 'education' | 'other'
+
+interface DemoFormData {
+  // Required
+  brandName: string
+  email: string
+  industry: Industry
+  tone: Tone
+  platforms: Platform[]
+  
+  // Optional
+  imageUrls?: string[]
+  website?: string
+  consent: boolean
+  otherIndustry?: string // For when 'other' is selected
+}
 
 interface GeneratedContent {
   platform: Platform
@@ -49,25 +63,16 @@ export const DemoGeneratorSection: React.FC = () => {
   const [emailSent, setEmailSent] = useState(false)
   
   // Form state
-  const [formData, setFormData] = useState({
-    uploadedFile: null as File | null,
-    url: '',
-    description: '',
-    contentGoal: 'awareness' as ContentGoal,
+  const [formData, setFormData] = useState<DemoFormData>({
     brandName: '',
-    brandColors: '',
-    voiceTone: 'friendly' as VoiceTone,
-    postType: 'auto' as PostType,
+    email: '',
+    industry: 'saas' as Industry,
+    tone: 'friendly' as Tone,
     platforms: ['instagram'] as Platform[],
-    email: ''
+    website: '',
+    consent: false,
+    otherIndustry: ''
   })
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setFormData({ ...formData, uploadedFile: file })
-    }
-  }
 
   const togglePlatform = (platform: Platform) => {
     const platforms = formData.platforms.includes(platform)
@@ -76,29 +81,56 @@ export const DemoGeneratorSection: React.FC = () => {
     setFormData({ ...formData, platforms })
   }
 
+  const industryOptions: { value: Industry; label: string }[] = [
+    { value: 'ecommerce', label: 'E-commerce' },
+    { value: 'saas', label: 'SaaS/Technology' },
+    { value: 'agency', label: 'Marketing Agency' },
+    { value: 'fitness', label: 'Fitness/Wellness' },
+    { value: 'restaurant', label: 'Restaurant/Food' },
+    { value: 'services', label: 'Professional Services' },
+    { value: 'realestate', label: 'Real Estate' },
+    { value: 'healthcare', label: 'Healthcare' },
+    { value: 'education', label: 'Education' },
+    { value: 'other', label: 'Other' }
+  ]
+
   const generateContent = async () => {
     setIsGenerating(true)
     setStep(3)
 
-    // Simulate API call
+    // Simulate API call (will be replaced with real API in Phase 1.2)
     setTimeout(() => {
+      const industryContext = formData.industry === 'other' ? formData.otherIndustry || 'business' : formData.industry;
+      
       const mockContent: GeneratedContent[] = formData.platforms.map(platform => ({
         platform,
         variants: [
           {
-            caption: `🚀 Introducing ${formData.brandName || 'our latest innovation'}! We're transforming the way businesses handle content creation with AI-powered automation that works 24/7.\n\n✨ Upload once, publish everywhere\n⚡ Save 20+ hours per week\n🎯 Consistent brand voice across all platforms\n\nReady to revolutionize your content strategy?`,
-            hashtags: ['#ContentAutomation', '#AIMarketing', '#SocialMediaStrategy', '#DigitalTransformation', '#MarketingAutomation'],
-            cta: 'Start your free trial today →'
+            caption: formData.tone === 'professional' 
+              ? `${formData.brandName} is revolutionizing the ${industryContext} industry with AI-powered content automation.\n\nOur solution delivers:\n• Consistent brand messaging across all channels\n• 20+ hours saved weekly on content creation\n• Data-driven insights for optimal engagement\n\nDiscover how leading brands are scaling their social presence with intelligent automation.`
+              : formData.tone === 'playful'
+              ? `Hey ${industryContext} friends! 👋 ${formData.brandName} here with some exciting news!\n\n🎉 We're making content creation FUN again! No more staring at blank screens or scrambling for ideas.\n\n✨ AI does the heavy lifting\n🚀 You get the glory\n💫 Your audience gets amazing content\n\nWho's ready to level up? 🙌`
+              : formData.tone === 'bold'
+              ? `${formData.brandName} is disrupting the ${industryContext} game. 💥\n\nWhile competitors struggle with content, we're already 10 steps ahead.\n\n🔥 AI-powered automation\n⚡ Lightning-fast execution\n🎯 Precision-targeted messaging\n\nStop following. Start leading.`
+              : `${formData.brandName} is here to transform your ${industryContext} content strategy! 🌟\n\nWe believe great content shouldn't be complicated. That's why we've built an AI system that understands your brand and creates authentic posts your audience will love.\n\n✅ Easy to use\n✅ Always on-brand\n✅ Saves you time\n\nLet's grow together!`,
+            hashtags: platform === 'linkedin' 
+              ? ['#B2B', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}`, '#Innovation']
+              : platform === 'twitter'
+              ? ['#AI', '#Automation']
+              : ['#ContentMarketing', '#AIAutomation', `#${industryContext.charAt(0).toUpperCase() + industryContext.slice(1)}Tech`, '#SocialMedia', '#MarketingStrategy'],
+            cta: platform === 'linkedin' ? 'Connect with us to learn more →' : 'Start your free trial today →'
           },
           {
-            caption: `Ever wished you had a content team that never sleeps? 🌙\n\n${formData.brandName || 'Persimmon Labs'} makes it possible. Our AI understands your brand voice and creates engaging content that resonates with your audience.\n\n📈 3x engagement increase\n⏰ Post at optimal times automatically\n🎨 On-brand, every time`,
-            hashtags: ['#ContentMarketing', '#AI', '#Automation', '#GrowthHacking', '#BusinessGrowth'],
-            cta: 'Book a demo and see the magic ✨'
+            caption: formData.tone === 'friendly'
+              ? `Hi from ${formData.brandName}! 👋\n\nWe know how challenging it can be to keep up with social media in the ${industryContext} space. That's why we created something special just for you.\n\n🤝 Partner with AI\n📅 Never miss a post\n💬 Engage authentically\n\nYour success is our success!`
+              : `${formData.brandName} presents the future of ${industryContext} marketing.\n\nIntelligent. Automated. Effective.\n\n📊 Data-driven content\n🔄 Multi-platform distribution\n📈 Measurable ROI`,
+            hashtags: ['#Marketing', `#${industryContext}`, '#ContentStrategy', '#DigitalMarketing'],
+            cta: 'Book your personalized demo ✨'
           },
           {
-            caption: `Stop spending hours on content creation. Start focusing on what matters.\n\n${formData.brandName || 'Your brand'} deserves consistent, high-quality content without the hassle. Our AI-powered platform handles everything from ideation to publishing.\n\n💡 Smart content suggestions\n🔄 Automatic repurposing\n📊 Performance analytics`,
-            hashtags: ['#Productivity', '#Marketing', '#ContentCreation', '#Innovation', '#TechSolution'],
-            cta: 'Get started in 60 seconds'
+            caption: `${formData.brandName} | Transforming ${industryContext} content creation\n\n⏰ Save 20+ hours weekly\n📱 Manage all platforms from one place\n🎯 Reach the right audience every time\n\nJoin hundreds of ${industryContext} leaders already using AI to scale their content.`,
+            hashtags: ['#Productivity', '#AI', `#${industryContext}Marketing`, '#Automation'],
+            cta: 'Get started in 60 seconds →'
           }
         ]
       }))
@@ -176,97 +208,113 @@ export const DemoGeneratorSection: React.FC = () => {
               className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
               <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
-                <Upload className="w-6 h-6 mr-2 text-persimmon-coral" />
-                Step 1: Upload Your Content
+                <Sparkles className="w-6 h-6 mr-2 text-persimmon-coral" />
+                Step 1: Tell Us About Your Brand
               </h3>
               
               <div className="grid md:grid-cols-2 gap-6">
-                {/* File Upload */}
+                {/* Brand Name */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Upload Image (Optional)
+                    Brand/Company Name *
                   </label>
-                  <div className="border-2 border-dashed border-gray-600 rounded-lg p-6 text-center hover:border-persimmon-coral transition-colors bg-gray-800/50">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      id="file-upload"
-                    />
-                    <label htmlFor="file-upload" className="cursor-pointer">
-                      {/* eslint-disable-next-line jsx-a11y/alt-text */}
-                      <Image className="w-12 h-12 mx-auto mb-2 text-gray-400" />
-                      <p className="text-sm text-gray-600">
-                        {formData.uploadedFile ? formData.uploadedFile.name : 'Click to upload or drag and drop'}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">PNG, JPG up to 10MB</p>
-                    </label>
-                  </div>
+                  <input
+                    type="text"
+                    placeholder="e.g., Acme Coffee Co."
+                    value={formData.brandName}
+                    onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
+                    required
+                  />
                 </div>
 
-                {/* URL Input */}
+                {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Or Paste a URL
+                    Email Address *
                   </label>
                   <div className="relative">
-                    <Link2 className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                    <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
                     <input
-                      type="url"
-                      placeholder="https://example.com/article"
-                      value={formData.url}
-                      onChange={(e) => setFormData({ ...formData, url: e.target.value })}
+                      type="email"
+                      placeholder="you@company.com"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       className="w-full pl-10 pr-3 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
+                      required
                     />
                   </div>
                 </div>
               </div>
 
-              {/* Description */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  What would you like to create?
-                </label>
-                <textarea
-                  placeholder="E.g., Promote our new coffee blend launch, share a customer success story, announce a workshop..."
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
-                  rows={3}
-                />
-              </div>
-
-              {/* Content Goal */}
+              {/* Industry */}
               <div className="mt-6">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   <Target className="inline w-4 h-4 mr-1" />
-                  Content Goal
+                  Industry *
                 </label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {(['awareness', 'lead_gen', 'launch', 'promo'] as ContentGoal[]).map((goal) => (
-                    <button
-                      key={goal}
-                      onClick={() => setFormData({ ...formData, contentGoal: goal })}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all ${
-                        formData.contentGoal === goal
-                          ? 'border-persimmon-coral bg-persimmon-coral/10 text-persimmon-coral'
-                          : 'border-gray-700 hover:border-gray-600 text-gray-400'
-                      }`}
-                    >
-                      {goal.replace('_', ' ').charAt(0).toUpperCase() + goal.replace('_', ' ').slice(1)}
-                    </button>
+                <select
+                  value={formData.industry}
+                  onChange={(e) => setFormData({ ...formData, industry: e.target.value as Industry })}
+                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
+                  required
+                >
+                  {industryOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
                   ))}
-                </div>
+                </select>
+                {formData.industry === 'other' && (
+                  <input
+                    type="text"
+                    placeholder="Please specify your industry"
+                    value={formData.otherIndustry || ''}
+                    onChange={(e) => setFormData({ ...formData, otherIndustry: e.target.value })}
+                    className="w-full mt-2 px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
+                  />
+                )}
+              </div>
+
+              {/* Website (Optional) */}
+              <div className="mt-6">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  <Link2 className="inline w-4 h-4 mr-1" />
+                  Website (Optional)
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://yourcompany.com"
+                  value={formData.website || ''}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">We&apos;ll use this for additional context about your brand</p>
+              </div>
+
+              {/* Marketing Consent */}
+              <div className="mt-6">
+                <label className="flex items-start">
+                  <input
+                    type="checkbox"
+                    checked={formData.consent}
+                    onChange={(e) => setFormData({ ...formData, consent: e.target.checked })}
+                    className="mt-1 mr-3 w-4 h-4 text-persimmon-coral bg-gray-800 border-gray-700 rounded focus:ring-persimmon-coral focus:ring-2"
+                  />
+                  <span className="text-sm text-gray-300">
+                    I agree to receive my generated content via email and accept marketing communications from Persimmon Labs
+                  </span>
+                </label>
               </div>
 
               <div className="mt-8 flex justify-end">
                 <Button
                   size="lg"
                   onClick={() => setStep(2)}
+                  disabled={!formData.brandName || !formData.email || !formData.consent}
                   className="group"
                 >
-                  Next: Brand Details
+                  Next: Choose Platforms
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
@@ -281,130 +329,113 @@ export const DemoGeneratorSection: React.FC = () => {
               exit={{ opacity: 0, x: -20 }}
               className="bg-gray-900 border border-gray-800 rounded-2xl p-8"
             >
-              <h3 className="text-2xl font-bold mb-6 flex items-center">
+              <h3 className="text-2xl font-bold mb-6 flex items-center text-white">
                 <Palette className="w-6 h-6 mr-2 text-persimmon-coral" />
-                Step 2: Brand & Platforms
+                Step 2: Voice Tone & Platforms
               </h3>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* Brand Name */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Brand Name
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Your Company"
-                    value={formData.brandName}
-                    onChange={(e) => setFormData({ ...formData, brandName: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
-                  />
-                </div>
-
-                {/* Brand Colors */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Brand Colors (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="#FF6B35, #004E98"
-                    value={formData.brandColors}
-                    onChange={(e) => setFormData({ ...formData, brandColors: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
-                  />
-                </div>
-              </div>
-
               {/* Voice Tone */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-300 mb-3">
                   <Type className="inline w-4 h-4 mr-1" />
-                  Voice Tone
+                  Choose Your Brand Voice *
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {(['professional', 'friendly', 'playful', 'bold'] as VoiceTone[]).map((tone) => (
+                  {(['professional', 'friendly', 'playful', 'bold'] as Tone[]).map((tone) => (
                     <button
                       key={tone}
-                      onClick={() => setFormData({ ...formData, voiceTone: tone })}
-                      className={`px-4 py-2 rounded-lg border-2 transition-all ${
-                        formData.voiceTone === tone
+                      onClick={() => setFormData({ ...formData, tone })}
+                      className={`px-4 py-3 rounded-lg border-2 transition-all ${
+                        formData.tone === tone
                           ? 'border-persimmon-coral bg-persimmon-coral/10 text-persimmon-coral'
                           : 'border-gray-700 hover:border-gray-600 text-gray-400'
                       }`}
                     >
-                      {tone.charAt(0).toUpperCase() + tone.slice(1)}
+                      <span className="font-medium">{tone.charAt(0).toUpperCase() + tone.slice(1)}</span>
+                      <p className="text-xs mt-1 opacity-80">
+                        {tone === 'professional' && 'Formal, authoritative'}
+                        {tone === 'friendly' && 'Warm, approachable'}
+                        {tone === 'playful' && 'Fun, casual'}
+                        {tone === 'bold' && 'Strong, confident'}
+                      </p>
                     </button>
                   ))}
                 </div>
               </div>
 
               {/* Platforms */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Select Platforms
+              <div className="mt-8">
+                <label className="block text-sm font-medium text-gray-300 mb-3">
+                  Select Platforms (Choose 1-4) *
                 </label>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   <button
                     onClick={() => togglePlatform('instagram')}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.platforms.includes('instagram')
-                        ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-persimmon-coral bg-persimmon-coral/10'
+                        : 'border-gray-700 hover:border-gray-600'
                     }`}
                   >
-                    <Instagram className="w-6 h-6 mx-auto mb-1 text-pink-600" />
-                    <span className="text-sm">Instagram</span>
+                    <Instagram className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.platforms.includes('instagram') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      formData.platforms.includes('instagram') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`}>Instagram</span>
                   </button>
                   <button
                     onClick={() => togglePlatform('linkedin')}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.platforms.includes('linkedin')
-                        ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-persimmon-coral bg-persimmon-coral/10'
+                        : 'border-gray-700 hover:border-gray-600'
                     }`}
                   >
-                    <Linkedin className="w-6 h-6 mx-auto mb-1 text-blue-700" />
-                    <span className="text-sm">LinkedIn</span>
+                    <Linkedin className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.platforms.includes('linkedin') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      formData.platforms.includes('linkedin') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`}>LinkedIn</span>
                   </button>
                   <button
                     onClick={() => togglePlatform('twitter')}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.platforms.includes('twitter')
-                        ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-persimmon-coral bg-persimmon-coral/10'
+                        : 'border-gray-700 hover:border-gray-600'
                     }`}
                   >
-                    <Twitter className="w-6 h-6 mx-auto mb-1 text-sky-500" />
-                    <span className="text-sm">Twitter/X</span>
+                    <Twitter className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.platforms.includes('twitter') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      formData.platforms.includes('twitter') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`}>Twitter/X</span>
                   </button>
                   <button
                     onClick={() => togglePlatform('facebook')}
                     className={`p-4 rounded-lg border-2 transition-all ${
                       formData.platforms.includes('facebook')
-                        ? 'border-orange-500 bg-orange-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-persimmon-coral bg-persimmon-coral/10'
+                        : 'border-gray-700 hover:border-gray-600'
                     }`}
                   >
-                    <Facebook className="w-6 h-6 mx-auto mb-1 text-blue-600" />
-                    <span className="text-sm">Facebook</span>
+                    <Facebook className={`w-8 h-8 mx-auto mb-2 ${
+                      formData.platforms.includes('facebook') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`} />
+                    <span className={`text-sm font-medium ${
+                      formData.platforms.includes('facebook') ? 'text-persimmon-coral' : 'text-gray-400'
+                    }`}>Facebook</span>
                   </button>
                 </div>
-              </div>
-
-              {/* Email */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email (to receive your content)
-                </label>
-                <input
-                  type="email"
-                  placeholder="you@company.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-700 bg-gray-800 text-white rounded-lg focus:ring-2 focus:ring-persimmon-coral focus:border-transparent"
-                  required
-                />
+                {formData.platforms.length === 0 && (
+                  <p className="text-sm text-red-400 mt-2">Please select at least one platform</p>
+                )}
+                {formData.platforms.length > 4 && (
+                  <p className="text-sm text-red-400 mt-2">Please select up to 4 platforms maximum</p>
+                )}
               </div>
 
               <div className="mt-8 flex justify-between">
@@ -418,10 +449,10 @@ export const DemoGeneratorSection: React.FC = () => {
                 <Button
                   size="lg"
                   onClick={generateContent}
-                  disabled={!formData.email || formData.platforms.length === 0}
+                  disabled={formData.platforms.length === 0 || formData.platforms.length > 4}
                   className="group"
                 >
-                  Generate Content
+                  Generate AI Content
                   <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
                 </Button>
               </div>
