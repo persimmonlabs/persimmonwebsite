@@ -3,7 +3,7 @@
 import { NavBar } from '@/components/NavBar'
 import { HeroSection } from '@/components/sections/HeroSectionV2'
 import { HowItWorksSection } from '@/components/sections/HowItWorksSection'
-import { DemoGeneratorSection } from '@/components/sections/DemoGeneratorSectionV2'
+import { N8nDemoGenerator } from '@/components/sections/N8nDemoGenerator'
 import { PricingSection } from '@/components/sections/PricingSection'
 import { SocialProofSection } from '@/components/sections/SocialProofSection'
 import { FAQSection } from '@/components/sections/FAQSection'
@@ -16,7 +16,7 @@ export default function Home() {
       <NavBar />
       <HeroSection />
       <HowItWorksSection />
-      <DemoGeneratorSection />
+      <N8nDemoGenerator />
       <PricingSection />
       <SocialProofSection />
       <FAQSection />
