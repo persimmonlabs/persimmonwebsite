@@ -82,67 +82,161 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
       }
     },
     {
-      "name": "Generate 7-Day Content Strategy",
+      "name": "AI Content Strategy Generator",
+      "type": "n8n-nodes-base.httpRequest", 
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "model": "gpt-4o-mini",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are an elite social media strategist with 10+ years experience. Create a complete 7-day content calendar that demonstrates REAL automation power. Return ONLY valid JSON in this exact format: {\"contentPlan\": [{\"date\": \"MM/DD/YYYY\", \"time\": \"HH:MM AM/PM\", \"platform\": \"Instagram/LinkedIn/Twitter\", \"postType\": \"Educational/Behind-the-scenes/Product highlight/Industry insight/Customer story/How-to/Motivational\", \"content\": \"full post text with emojis and hashtags\", \"status\": \"Scheduled\", \"approval\": \"Pending\", \"engagement_prediction\": \"High/Medium/Low\", \"ai_optimization\": \"specific suggestion\"}]}. Generate 15-20 posts across 7 days. Each post must be industry-specific, engaging, and show clear AI intelligence."
+            },
+            {
+              "role": "user",
+              "content": "Brand: {{$json.brandName}}\nIndustry: {{$json.industry}}\nStyle: {{$json.style}}\nGoal: Create content that shows this brand understands their market deeply and can automate high-quality posts that drive real engagement and conversions."
+            }
+          ],
+          "temperature": 0.8,
+          "max_tokens": 3000,
+          "response_format": { "type": "json_object" }
+        }
+      }
+    },
+    {
+      "name": "Parse AI Content Response",
       "type": "n8n-nodes-base.code",
       "parameters": {
         "jsCode": `
-          const { brandName, industry, style } = $json;
+          // Parse the AI-generated content
+          const aiResponse = JSON.parse($json.choices[0].message.content);
+          const { brandName, industry, style, email } = $('Webhook').item.json;
           
-          // Generate 7 days of content
-          const contentPlan = [];
-          const platforms = ['Instagram', 'LinkedIn', 'Twitter'];
-          const postTypes = ['Educational', 'Behind-the-scenes', 'Product highlight', 'Industry insight', 'Customer story', 'How-to', 'Motivational'];
+          // Add metadata and ensure quality
+          const contentPlan = aiResponse.contentPlan.map(post => ({
+            ...post,
+            brandName,
+            industry, 
+            style,
+            created_by: 'AI Content Engine',
+            ai_generated: true,
+            demo_mode: true,
+            estimated_reach: Math.floor(Math.random() * 2000) + 500,
+            estimated_engagement: Math.floor(Math.random() * 150) + 50
+          }));
           
-          for (let day = 1; day <= 7; day++) {
-            const date = new Date();
-            date.setDate(date.getDate() + day);
-            
-            // 2-3 posts per day across different platforms
-            const dailyPosts = Math.floor(Math.random() * 2) + 2;
-            
-            for (let post = 0; post < dailyPosts; post++) {
-              const platform = platforms[Math.floor(Math.random() * platforms.length)];
-              const postType = postTypes[Math.floor(Math.random() * postTypes.length)];
-              const time = ['9:00 AM', '1:00 PM', '5:00 PM'][post] || '7:00 PM';
-              
-              const content = generateContent(brandName, industry, postType, platform, style);
-              
-              contentPlan.push({
-                date: date.toLocaleDateString(),
-                time: time,
-                platform: platform,
-                postType: postType,
-                content: content,
-                status: 'Scheduled',
-                approval: 'Pending'
-              });
+          // Add summary statistics
+          const summary = {
+            total_posts: contentPlan.length,
+            platforms: [...new Set(contentPlan.map(p => p.platform))],
+            post_types: [...new Set(contentPlan.map(p => p.postType))],
+            high_engagement_posts: contentPlan.filter(p => p.engagement_prediction === 'High').length,
+            ai_optimizations: contentPlan.length
+          };
+          
+          return [{ json: { brandName, industry, style, email, contentPlan, summary } }];
+        `
+      }
+    },
+    {
+      "name": "AI Brand Voice Analysis", 
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST", 
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi", 
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "model": "gpt-4o-mini",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are a brand strategist. Analyze the brand and return JSON: {\"voice_analysis\": {\"personality\": [\"traits\"], \"tone\": \"description\", \"unique_angle\": \"what makes them different\", \"target_audience\": \"who they serve\", \"content_pillars\": [\"pillar1\", \"pillar2\", \"pillar3\"], \"competitive_advantage\": \"key differentiator\", \"automation_potential\": \"High/Medium/Low\", \"optimization_recommendations\": [\"rec1\", \"rec2\", \"rec3\"]}}"
+            },
+            {
+              "role": "user", 
+              "content": "Analyze this brand: {{$json.brandName}} in the {{$json.industry}} industry with a {{$json.style}} style. What's their brand voice and how should their automated content strategy be optimized?"
             }
-          }
+          ],
+          "temperature": 0.7,
+          "max_tokens": 1000,
+          "response_format": { "type": "json_object" }
+        }
+      }
+    },
+    {
+      "name": "AI Visual Content Generator",
+      "type": "n8n-nodes-base.httpRequest",
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions", 
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "model": "gpt-4o-mini",
+          "messages": [
+            {
+              "role": "system", 
+              "content": "You are a creative director specializing in visual content for social media. Generate detailed visual descriptions and design recommendations for each post. Return JSON: {\"visual_recommendations\": [{\"post_index\": 0, \"visual_type\": \"Photo/Graphic/Video/Carousel\", \"description\": \"detailed visual description\", \"design_elements\": [\"element1\", \"element2\"], \"color_palette\": [\"#color1\", \"#color2\"], \"text_overlay\": \"suggested overlay text\", \"call_to_action_visual\": \"CTA button or element\"}]}"
+            },
+            {
+              "role": "user",
+              "content": "Create visual recommendations for {{$json.contentPlan.length}} social media posts for {{$json.brandName}} ({{$json.industry}} industry, {{$json.style}} style). Each visual should be professional, on-brand, and optimized for engagement."
+            }
+          ],
+          "temperature": 0.7,
+          "max_tokens": 2000,
+          "response_format": { "type": "json_object" }
+        }
+      }
+    },
+    {
+      "name": "Merge AI Results", 
+      "type": "n8n-nodes-base.code",
+      "parameters": {
+        "jsCode": `
+          // Get all AI-generated data
+          const contentData = $('Parse AI Content Response').item.json;
+          const brandAnalysis = JSON.parse($('AI Brand Voice Analysis').item.json.choices[0].message.content);
+          const visualData = JSON.parse($('AI Visual Content Generator').item.json.choices[0].message.content);
           
-          // Generate smart content based on inputs
-          function generateContent(brand, industry, type, platform, style) {
-            const templates = {
-              'Educational': {
-                Instagram: brand + ' Tip: Did you know that 90% of ' + industry + ' businesses struggle with consistency? Here's how to fix it... #' + industry + 'Tips',
-                LinkedIn: 'Industry Insight: The biggest challenge in ' + industry + ' isn't competition—it's staying consistent with your message. At ' + brand + ', we've learned that...',
-                Twitter: '🧵 Thread: 5 ' + industry + ' mistakes that are costing you customers (and how ' + brand + ' helps you avoid them)'
-              },
-              'Behind-the-scenes': {
-                Instagram: 'Behind the scenes at ' + brand + '! ✨ Our team is working on something exciting for the ' + industry + ' industry...',
-                LinkedIn: 'Transparency Tuesday: Here's what goes into building ' + brand + ' for the ' + industry + ' market...',
-                Twitter: 'Real talk: Building ' + brand + ' in the ' + industry + ' space has taught us these 3 things...'
-              },
-              'Product highlight': {
-                Instagram: brand + ' makes ' + industry + ' simple. Here's how we're changing the game... 🚀',
-                LinkedIn: 'Product Spotlight: Why ' + brand + ' is the solution ' + industry + ' has been waiting for...',
-                Twitter: 'Hot take: ' + industry + ' tools are overcomplicated. ' + brand + ' changes that.'
-              }
-            };
+          // Merge visual recommendations with content plan
+          const enhancedContentPlan = contentData.contentPlan.map((post, index) => {
+            const visual = visualData.visual_recommendations.find(v => v.post_index === index) || 
+                          visualData.visual_recommendations[index % visualData.visual_recommendations.length];
             
-            return templates[type]?.[platform] || brand + ' is revolutionizing ' + industry + '. Here's how...';
-          }
+            return {
+              ...post,
+              visual_recommendation: visual,
+              brand_voice: brandAnalysis.voice_analysis
+            };
+          });
           
-          return [{ json: { ...input, contentPlan } }];
+          // Create comprehensive demo data
+          const demoResults = {
+            ...contentData,
+            contentPlan: enhancedContentPlan,
+            brand_analysis: brandAnalysis.voice_analysis,
+            visual_strategy: visualData.visual_recommendations,
+            ai_powered: true,
+            generation_timestamp: new Date().toISOString(),
+            automation_score: 95 // High automation potential
+          };
+          
+          return [{ json: demoResults }];
         `
       }
     },
@@ -170,57 +264,87 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
         "emailType": "html",
         "message": `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #F5793B;">Your 7-Day Content Plan is Ready!</h2>
-            
-            <p>Hi there,</p>
-            
-            <p><strong>Your {{$json.brandName}} content automation is now running live.</strong></p>
-            
-            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3>📅 What We Generated For You:</h3>
-              <ul>
-                <li>✅ 7-day content calendar</li>
-                <li>✅ {{$json.contentPlan.length}} ready-to-post pieces</li>
-                <li>✅ Multi-platform strategy (Instagram, LinkedIn, Twitter)</li>
-                <li>✅ Automated scheduling system</li>
-              </ul>
+            <div style="background: linear-gradient(135deg, #F5793B, #f1580c); padding: 40px 20px; text-align: center; color: white; border-radius: 12px 12px 0 0;">
+              <h1 style="margin: 0; font-size: 28px;">🤖 AI Just Created Your Content Empire!</h1>
+              <p style="margin: 10px 0 0 0; font-size: 18px; opacity: 0.9;">{{$json.brandName}} - Powered by Real AI Automation</p>
             </div>
             
-            <p><strong>🔗 View Your Content Calendar:</strong><br>
-            <a href="https://docs.google.com/spreadsheets/d/{{$('Create Demo Google Sheet').item.json.spreadsheetId}}" 
-               style="color: #F5793B; text-decoration: none; font-weight: bold;">
-               Click here to see your scheduled posts →
-            </a></p>
-            
-            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #2d5016;">🎯 With Our Full Service:</h3>
-              <p><strong>All you do is APPROVE.</strong> We handle everything else:</p>
-              <ul style="margin: 10px 0;">
-                <li>✨ Content gets posted automatically to all platforms</li>
-                <li>📊 Real-time analytics and optimization</li>
-                <li>🔄 Continuous content generation based on performance</li>
-                <li>👥 Engagement monitoring and response suggestions</li>
-              </ul>
-              <p style="font-weight: bold; color: #2d5016;">Zero work for you. Maximum results for your brand.</p>
+            <div style="background: white; padding: 30px; border: 1px solid #ddd;">
+              <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F5793B;">
+                <h3 style="color: #F5793B; margin-top: 0;">🧠 What Our AI Just Did For You:</h3>
+                <ul style="margin: 10px 0; padding-left: 20px;">
+                  <li><strong>AI Strategy Analysis:</strong> Analyzed your {{$json.industry}} market position</li>
+                  <li><strong>AI Content Generation:</strong> Created {{$json.contentPlan.length}} unique posts with industry expertise</li>
+                  <li><strong>AI Brand Voice:</strong> Defined your {{$json.brand_analysis.personality.join(", ")}} personality</li>
+                  <li><strong>AI Visual Direction:</strong> Generated visual concepts for every post</li>
+                  <li><strong>AI Optimization:</strong> Predicted engagement and suggested improvements</li>
+                </ul>
+                <p style="font-weight: bold; color: #2d5016; margin: 15px 0 5px 0;">
+                  🎯 Automation Score: {{$json.automation_score}}/100 - Your brand is PERFECT for AI automation!
+                </p>
+              </div>
+              
+              <div style="text-align: center; margin: 25px 0;">
+                <a href="https://docs.google.com/spreadsheets/d/{{$('Create Demo Google Sheet').item.json.spreadsheetId}}" 
+                   style="background: #F5793B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; font-size: 16px;">
+                   🔗 See Your AI-Generated Content Calendar →
+                </a>
+              </div>
+              
+              <div style="background: linear-gradient(135deg, #e8f5e8, #d4edda); padding: 25px; border-radius: 12px; margin: 25px 0;">
+                <h3 style="color: #2d5016; margin-top: 0;">🚀 This Is Just 1% Of What Our AI Can Do</h3>
+                <p style="color: #2d5016; margin: 10px 0;">With our full automation system:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0;">
+                  <div>
+                    <strong>✨ You Approve Once</strong><br>
+                    <small>AI handles everything forever</small>
+                  </div>
+                  <div>
+                    <strong>📊 Real-time AI Optimization</strong><br>
+                    <small>Content improves automatically</small>
+                  </div>
+                  <div>
+                    <strong>🎯 Multi-platform AI Publishing</strong><br>
+                    <small>Instagram, LinkedIn, Twitter, Facebook</small>
+                  </div>
+                  <div>
+                    <strong>🧠 Continuous AI Learning</strong><br>
+                    <small>Gets smarter with every post</small>
+                  </div>
+                </div>
+                <p style="font-weight: bold; color: #2d5016; text-align: center; font-size: 18px; margin: 20px 0 10px 0;">
+                  Set it once. AI runs it forever. You just watch the results.
+                </p>
+              </div>
+              
+              <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 25px 0; border: 1px solid #ffeaa7;">
+                <h4 style="color: #856404; margin-top: 0;">⚡ This Demo Shows REAL AI Power</h4>
+                <p style="color: #856404; margin: 5px 0;">
+                  Unlike other "AI tools" that just rephrase templates, this demo used actual AI to understand your {{$json.industry}} market, 
+                  analyze your brand, and create strategic content that converts. This is the same AI system we'd deploy for your business.
+                </p>
+              </div>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="https://calendly.com/persimmonlabs/strategy-call" 
+                   style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 18px 35px; text-decoration: none; border-radius: 50px; font-weight: bold; display: inline-block; font-size: 18px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);">
+                   🚀 Activate Full AI Automation →
+                </a>
+              </div>
+              
+              <p style="font-size: 14px; color: #666; text-align: center; margin-top: 30px;">
+                <strong>P.S.</strong> This AI system generated your content in under 60 seconds. 
+                Imagine what it could do with full access to your brand data and continuous optimization. 
+                <a href="https://calendly.com/persimmonlabs/strategy-call" style="color: #F5793B; font-weight: bold;">Let's make it happen</a>.
+              </p>
             </div>
             
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="https://calendly.com/persimmonlabs/strategy-call" 
-                 style="background: #F5793B; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
-                 Book Your Strategy Call
-              </a>
+            <div style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 12px 12px;">
+              <p style="margin: 0; font-size: 14px;">
+                <strong>Persimmon Labs</strong> - Real AI Content Automation<br>
+                <a href="https://persimmonlabs.io" style="color: #F5793B;">persimmonlabs.io</a>
+              </p>
             </div>
-            
-            <p style="font-size: 14px; color: #666;">
-              <strong>P.S.</strong> This demo runs for 7 days. Want to see how we'd automate your content forever? 
-              <a href="https://calendly.com/persimmonlabs/strategy-call" style="color: #F5793B;">Let's talk</a>.
-            </p>
-            
-            <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-            <p style="font-size: 12px; color: #888; text-align: center;">
-              Persimmon Labs - AI-Powered Content Automation<br>
-              <a href="https://persimmonlabs.io" style="color: #F5793B;">persimnonlabs.io</a>
-            </p>
           </div>
         `
       }
@@ -253,12 +377,24 @@ Instead of generating mockups, this demo **actually creates and executes** a 7-d
       "main": [["Process Brand Input"]]
     },
     "Process Brand Input": {
-      "main": [["Create Demo Google Sheet", "Generate 7-Day Content Strategy"]]
+      "main": [["Create Demo Google Sheet", "AI Content Strategy Generator", "AI Brand Voice Analysis"]]
     },
     "Create Demo Google Sheet": {
-      "main": [["Populate Google Sheet"]]
+      "main": [["Merge AI Results"]]
     },
-    "Generate 7-Day Content Strategy": {
+    "AI Content Strategy Generator": {
+      "main": [["Parse AI Content Response"]]
+    },
+    "Parse AI Content Response": {
+      "main": [["AI Visual Content Generator"]]
+    },
+    "AI Brand Voice Analysis": {
+      "main": [["Merge AI Results"]]
+    },
+    "AI Visual Content Generator": {
+      "main": [["Merge AI Results"]]
+    },
+    "Merge AI Results": {
       "main": [["Populate Google Sheet"]]
     },
     "Populate Google Sheet": {

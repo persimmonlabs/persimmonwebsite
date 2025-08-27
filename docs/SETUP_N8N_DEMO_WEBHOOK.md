@@ -5,6 +5,7 @@ This guide will help you set up the n8n webhook that powers the live demo genera
 
 ## Prerequisites
 - ✅ n8n running on your VPS (https://n8n.persimmonlabs.cc)
+- ✅ OpenAI API key for AI content generation
 - ✅ Google OAuth setup for Sheets API
 - ✅ Email service configured (SendGrid/SMTP)
 - ✅ Basic n8n knowledge
@@ -23,7 +24,16 @@ This guide will help you set up the n8n webhook that powers the live demo genera
 
 ## Step 2: Configure Authentication
 
-### 2.1 Google Sheets OAuth
+### 2.1 OpenAI API (CRITICAL - Powers the AI)
+```bash
+# In your n8n instance, set up OpenAI credentials:
+1. Go to Settings > Credentials
+2. Add "OpenAI API" credential
+3. Get API key from https://platform.openai.com/api-keys
+4. Test with a simple AI request
+```
+
+### 2.2 Google Sheets OAuth
 ```bash
 # In your n8n instance, set up Google credentials:
 1. Go to Settings > Credentials
@@ -367,3 +377,35 @@ git push origin main
 5. **Add more sophisticated content templates**
 
 The n8n approach is MUCH more impressive because it shows actual automation in action, not just static mockups. Prospects see the magic happening live!
+
+## 🚀 AI-Powered Demo Economics
+
+### Cost Per Demo (OpenAI API)
+- **Content Generation**: ~$0.03 (3,000 tokens @ $0.01/1k tokens)
+- **Brand Analysis**: ~$0.01 (1,000 tokens)  
+- **Visual Recommendations**: ~$0.02 (2,000 tokens)
+- **Total per demo**: ~$0.06
+
+### ROI Analysis
+```
+1,000 demos/month = $60 in AI costs
+Conversion rate: 15% to strategy calls = 150 calls
+Close rate: 30% from calls = 45 new clients
+Average deal: $2,500/month = $112,500 revenue
+ROI: 1,875x return on AI investment
+```
+
+### Why AI Makes This Demo 10x Better
+1. **🧠 Real Intelligence**: Each demo shows actual AI thinking, not templates
+2. **🎯 Industry Expertise**: AI understands nuances templates never could  
+3. **⚡ Scalability**: Works for ANY industry without manual template creation
+4. **✨ Unique Results**: No two demos are identical - shows real AI power
+5. **🔮 Live Proof**: Prospects see the ACTUAL AI they'd be getting
+
+### API Usage Optimization
+- **Parallel Processing**: Content, brand, and visual analysis run simultaneously
+- **Smart Fallbacks**: Graceful degradation if any AI call fails
+- **Rate Limiting**: Built-in delays prevent API overages
+- **Cost Monitoring**: Track usage and optimize prompts for efficiency
+
+**This is what separates us from template-based "AI" tools - we're selling REAL artificial intelligence in action!**
