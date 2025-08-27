@@ -20,11 +20,10 @@ app.use(cors({
 const orchestrator = new DemoOrchestrator();
 
 // Health check endpoint
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   try {
     const health = await orchestrator.healthCheck();
     res.json({
-      status: 'ok',
       timestamp: new Date().toISOString(),
       ...health,
     });
@@ -153,7 +152,7 @@ app.post('/api/test-demo', async (req, res) => {
 });
 
 // Error handling middleware
-app.use((error: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((error: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error('Express error:', error);
   
   res.status(500).json({

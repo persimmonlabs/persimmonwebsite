@@ -1,5 +1,5 @@
 import * as puppeteer from 'puppeteer';
-import { Browser, Page } from 'puppeteer';
+import { Browser } from 'puppeteer';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -8,7 +8,7 @@ export class GraphicsService {
   private browserPool: Browser[] = [];
   private currentBrowserIndex = 0;
   
-  constructor(private poolSize: number = 3) {}
+  constructor() {}
   
   /**
    * Initialize browser pool for warm starts

@@ -1,5 +1,5 @@
 import * as puppeteer from 'puppeteer';
-import { Browser, Page } from 'puppeteer';
+import { Browser } from 'puppeteer';
 
 interface PdfResult {
   success: boolean;
