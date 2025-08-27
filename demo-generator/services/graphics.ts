@@ -12,7 +12,15 @@ export class GraphicsService {
    * Initialize browser pool for warm starts
    */
   async initBrowserPool(size = 3): Promise<void> {
-    // Implemented in next step
+    this.browserPool = [];
+    for (let i = 0; i < size; i++) {
+      const browser = await puppeteer.launch({
+        headless: 'new',
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      });
+      this.browserPool.push(browser);
+    }
+    console.log(`Browser pool initialized with ${size} instances`);
   }
   
   /**
