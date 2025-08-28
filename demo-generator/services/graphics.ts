@@ -50,9 +50,9 @@ export class GraphicsService {
    * Convert HTML to PNG image
    */
   async htmlToPng(html: string): Promise<Buffer> {
-    // Check if we should use mock mode (no browser available)
+    // Check if we should use demo mode (no browser available)
     if (process.env.MOCK_GRAPHICS === 'true') {
-      return this.generateMockImage();
+      return this.generateDemoImage();
     }
     
     try {
@@ -72,8 +72,8 @@ export class GraphicsService {
         await page.close();
       }
     } catch (error: any) {
-      console.warn('Browser graphics failed, using mock:', error.message);
-      return this.generateMockImage();
+      console.warn('Browser graphics failed, using fallback image:', error.message);
+      return this.generateDemoImage();
     }
   }
   
@@ -141,9 +141,9 @@ export class GraphicsService {
   }
   
   /**
-   * Generate mock PNG image for testing
+   * Generate demo PNG image as fallback when browser is unavailable
    */
-  private generateMockImage(): Buffer {
+  private generateDemoImage(): Buffer {
     // Create a simple PNG header and basic image data
     // This creates a valid 100x100 PNG with a colored square
     const width = 100;
@@ -216,11 +216,11 @@ export class GraphicsService {
    * Calculate CRC32 for PNG chunks
    */
   private calculateCRC32(type: string, data: Buffer): Buffer {
-    // Simplified CRC32 - returns mock CRC for demo purposes
-    const mockCrc = Buffer.alloc(4);
+    // Simplified CRC32 - returns demo CRC for fallback purposes
+    const demoCrc = Buffer.alloc(4);
     const seed = (type.charCodeAt(0) + data.length) % 1000; // Keep number small
-    mockCrc.writeUInt32BE(seed * 1000, 0); // Simple mock
-    return mockCrc;
+    demoCrc.writeUInt32BE(seed * 1000, 0); // Simple demo value
+    return demoCrc;
   }
   
   /**

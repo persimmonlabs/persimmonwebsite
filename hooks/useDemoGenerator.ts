@@ -57,8 +57,8 @@ export const useDemoGenerator = () => {
         setGeneratedContent(data.content)
         setSuccess(true)
       } else {
-        // Fallback to mock content if API doesn't return expected format
-        const mockContent: GeneratedContent[] = formData.platforms.map(platform => ({
+        // Fallback to demo content if API doesn't return expected format
+        const demoContent: GeneratedContent[] = formData.platforms.map(platform => ({
           platform,
           variants: [
             {
@@ -78,14 +78,14 @@ export const useDemoGenerator = () => {
             }
           ]
         }))
-        setGeneratedContent(mockContent)
+        setGeneratedContent(demoContent)
         setSuccess(true)
       }
     } catch (err) {
       console.error('Generation error:', err)
       setError(err instanceof Error ? err.message : 'An unexpected error occurred')
-      // Still provide mock content on error for demo purposes
-      const mockContent: GeneratedContent[] = formData.platforms.map(platform => ({
+      // Still provide demo content on error for demonstration purposes
+      const fallbackContent: GeneratedContent[] = formData.platforms.map(platform => ({
         platform,
         variants: [
           {
@@ -95,7 +95,7 @@ export const useDemoGenerator = () => {
           }
         ]
       }))
-      setGeneratedContent(mockContent)
+      setGeneratedContent(fallbackContent)
       setSuccess(true)
     } finally {
       setIsGenerating(false)

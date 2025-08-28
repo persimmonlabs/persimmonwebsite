@@ -169,13 +169,13 @@ export async function POST(request: NextRequest) {
     
     // Check if OpenAI is configured
     if (!process.env.OPENAI_API_KEY) {
-      console.log('OpenAI not configured, returning enhanced mock data');
-      const mockContent = generateMockContent(validatedData);
+      console.log('OpenAI not configured, returning enhanced demo data');
+      const demoContent = generateDemoContent(validatedData);
       
-      // Save mock results to database
+      // Save demo results to database
       if (demoRecord && prisma) {
         try {
-          for (const platformContent of mockContent) {
+          for (const platformContent of demoContent) {
             for (let i = 0; i < platformContent.variants.length; i++) {
               const variant = platformContent.variants[i];
               await prisma.demoResult.create({
@@ -215,9 +215,9 @@ export async function POST(request: NextRequest) {
       
       return NextResponse.json({
         demoId,
-        content: mockContent,
+        content: demoContent,
         shareableLink: `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/demo/${publicToken}`,
-        message: 'Demo mode - using mock content (OpenAI not configured)'
+        message: 'Demo mode - using sample content (OpenAI not configured)'
       });
     }
     
@@ -352,8 +352,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Enhanced mock content generator for testing without OpenAI
-function generateMockContent(data: any) {
+// Enhanced demo content generator for testing without OpenAI
+function generateDemoContent(data: any) {
   const { brandName, industry, tone, platforms } = data;
   const industryContext = industry === 'other' ? data.otherIndustry || 'business' : industry;
   
